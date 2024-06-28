@@ -9,7 +9,6 @@
     ],
     "require": {
         "php": "^8.2",
-        "ahsanabrar/support": "dev-main",
         "illuminate/support": "^11.0",
         "laranext/span": "^0.1.8"
     },
