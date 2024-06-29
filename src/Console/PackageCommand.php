@@ -16,6 +16,7 @@ class PackageCommand extends Command
      * @var string
      */
     protected $signature = 'ahsandevs:package {package : The span package name}
+                            {--web-routes : Add web routes}
                             {--namespace= : The root namespace of the package if it is different from package name}';
 
     /**
@@ -42,6 +43,10 @@ class PackageCommand extends Command
         );
 
         $this->updateFiles();
+
+        if ($this->option('web-routes')) {
+            $this->addWebRoutes();
+        }
 
         // Register the package...
         if ($this->confirm('Would you like to update your composer package?', true)) {
@@ -80,6 +85,26 @@ class PackageCommand extends Command
         (new Filesystem)->move(
             $this->packagePath('.gitignore.stub'),
             $this->packagePath('.gitignore')
+        );
+    }
+
+    /**
+     * Add Web Routes.
+     */
+    protected function addWebRoutes(): void
+    {
+        (new Filesystem)->copy(
+            __DIR__ . '/../../stubs/package/src/WebRoutesServiceProvider.stub',
+            $this->packagePath('src/ServiceProvider.stub')
+        );
+
+        // rename service provider and replacements...
+        $this->replace('{{ rootNamespace }}', $this->rootNamespace(), $this->packagePath('src/ServiceProvider.stub'));
+        $this->replace('{{ pascleName }}', $this->pascleName(), $this->packagePath('src/ServiceProvider.stub'));
+        $this->replace('{{ name }}', $this->argument('package'), $this->packagePath('src/ServiceProvider.stub'));
+        (new Filesystem)->move(
+            $this->packagePath('src/ServiceProvider.stub'),
+            $this->packagePath( 'src/' . $this->pascleName() . 'ServiceProvider.php' )
         );
     }
 

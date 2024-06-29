@@ -1,0 +1,52 @@
+<?php
+
+namespace {{ rootNamespace }};
+
+use Illuminate\Support\ServiceProvider;
+
+class {{ pascleName }}ServiceProvider extends ServiceProvider
+{
+    /**
+     * Register any application services.
+     */
+    public function register(): void
+    {
+        //
+    }
+
+    /**
+     * Bootstrap any application services.
+     */
+    public function boot(): void
+    {
+        $this->bootRoutes();
+        $this->bootResources();
+    }
+
+    /**
+     * Boot the package resources.
+     */
+    protected function bootResources(): void
+    {
+        $this->app->extend('view', function ($view) {
+            $view->getFinder()->setPaths([
+                base_path('packages/{{ name }}/resources/views'),
+            ]);
+
+            return $view;
+        });
+    }
+
+    /**
+     * Boot the package routes.
+     */
+    protected function bootRoutes(): void
+    {
+        Route::group([
+            'middleware' => 'web',
+            'prefix' => Span::prefix(),
+        ], function () {
+            $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
+        });
+    }
+}
