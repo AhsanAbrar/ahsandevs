@@ -1,10 +1,10 @@
 <?php
 
-namespace {{ rootNamespace }};
+namespace [[rootNamespace]];
 
 use Illuminate\Support\ServiceProvider;
 
-class {{ pascleName }}ServiceProvider extends ServiceProvider
+class [[pascalName]]ServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.

@@ -34,13 +34,23 @@ trait CommandHelpers
     }
 
     /**
+     * Get the package name.
+     *
+     * @return string
+     */
+    protected function name()
+    {
+        return $this->argument('name');
+    }
+
+    /**
      * Get the root namespace.
      *
      * @return string
      */
     protected function rootNamespace()
     {
-        return $this->option('namespace') ? str_replace('/', '\\', $this->option('namespace')) : Str::studly($this->argument('package'));
+        return $this->option('namespace') ? str_replace('/', '\\', $this->option('namespace')) : Str::studly($this->argument('name'));
     }
 
     /**
@@ -50,7 +60,7 @@ trait CommandHelpers
      */
     protected function rootNamespaceComposer()
     {
-        return $this->option('namespace') ? str_replace('/', '\\\\', $this->option('namespace')) : Str::studly($this->argument('package'));
+        return $this->option('namespace') ? str_replace('/', '\\\\', $this->option('namespace')) : Str::studly($this->argument('name'));
     }
 
     /**
@@ -135,7 +145,7 @@ trait CommandHelpers
      */
     protected function title()
     {
-        return Str::of($this->argument('package'))->replace('-', ' ')->title();
+        return Str::of($this->argument('name'))->replace('-', ' ')->title();
     }
 
     /**
@@ -143,9 +153,9 @@ trait CommandHelpers
      *
      * @return string
      */
-    protected function pascleName()
+    protected function pascalName()
     {
-        return Str::studly( $this->argument('package') );
+        return Str::studly( $this->argument('name') );
     }
 
     /**
@@ -155,6 +165,14 @@ trait CommandHelpers
      */
     protected function packagePath($path = null)
     {
-        return base_path('packages/' . $this->argument('package') . '/' . $path);
+        return base_path('packages/' . $this->argument('name') . '/' . $path);
+    }
+
+    /**
+     * Check if the given string is in kebab-case.
+     */
+    protected function isKebabCase(string $string): bool
+    {
+        return preg_match('/^[a-z]+(-[a-z]+)*$/', $string);
     }
 }

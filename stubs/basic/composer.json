@@ -1,11 +1,11 @@
 {
-    "name": "span/{{ name }}",
+    "name": "span/[[name]]",
     "require": {
         "php": "^8.2"
     },
     "autoload": {
         "psr-4": {
-            "{{ rootNamespaceComposer }}\\": "src/"
+            "[[rootNamespaceComposer]]\\": "src/"
         }
     },
     "config": {

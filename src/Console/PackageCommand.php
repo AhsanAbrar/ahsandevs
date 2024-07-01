@@ -3,10 +3,11 @@
 namespace AhsanDevs\Console;
 
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 
-class PackageCommand extends Command
+class PackageCommand extends Command implements PromptsForMissingInput
 {
     use CommandHelpers;
 
@@ -15,9 +16,13 @@ class PackageCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'ahsandevs:package {package : The span package name}
-                            {--web-routes : Add web routes}
-                            {--namespace= : The root namespace of the package if it is different from package name}';
+    protected $signature = 'ahsandevs:package {name : The span package name} {type=basic : The span package type}
+                            {--routes : Add web routes to the basic package}
+                            {--views : Add web routes and views to the basic package}
+                            {--namespace= : The root namespace of the package if it is different from package name}
+                            {--no-composer : Do not add the package to composer.json}
+                            {--autoload : Add package to the PSR-4 autoload in composer.json}
+                            {--composer-setup : Add package to require-dev and repositories in composer.json}';
 
     /**
      * The console command description.
@@ -31,31 +36,126 @@ class PackageCommand extends Command
      */
     public function handle()
     {
-        if ( is_dir($this->packagePath()) ) {
-            $this->error('Package already exists!');
+        $this->validateArguments();
 
-            return false;
+        if ( is_dir($this->packagePath()) ) {
+            $this->fail('Package already exists!');
         }
 
+        $this->info('Creating a new span package...');
+
         (new Filesystem)->copyDirectory(
-            __DIR__ . '/../../stubs/package',
+            __DIR__ . '/../../stubs/' . $this->argument('type'),
             $this->packagePath()
         );
 
-        $this->updateFiles();
+        $this->updateStubs();
+        $this->renameStubs();
+        $this->modificationsWithOptions();
 
-        if ($this->option('web-routes')) {
-            $this->addWebRoutes();
+        if ($this->option('no-composer')) {
+            $this->info('Span package generated successfully.');
+
+            return;
         }
+
+        if ($this->option('autoload')) {
+            $this->addPackageToAutoload();
+        } elseif ($this->option('composer-setup')) {
+            $this->addPackageToRequireDev();
+            $this->addPackageToRepositories();
+        } else {
+            $this->addPackageToAutoload();
+        }
+
+        $this->composerUpdate();
+        $this->addPackageToConfig();
 
         // Register the package...
-        if ($this->confirm('Would you like to update your composer package?', true)) {
-            $this->addPackageToAutoload();
+        // if ($this->confirm('Would you like to update your composer package?', true)) {
+        //     $this->addPackageToAutoload();
 
-            $this->composerDump();
-        }
+        //     $this->composerDump();
+        // }
 
         $this->info('Span package generated successfully.');
+    }
+
+    /**
+     * Update Stubs.
+     */
+    protected function updateStubs(): void
+    {
+        $filesystem = new Filesystem();
+        $files = $filesystem->allFiles($this->packagePath());
+
+        foreach ($files as $file) {
+            $stub = $filesystem->get($file);
+
+            $replacements = [
+                '[[name]]' => $this->name(),
+                '[[rootNamespace]]' => $this->rootNamespace(),
+                '[[rootNamespaceComposer]]' => $this->rootNamespaceComposer(),
+                '[[pascalName]]' => $this->pascalName(),
+                '[[title]]' => $this->title(),
+            ];
+
+            $content = str_replace(array_keys($replacements), array_values($replacements), $stub);
+
+            $filesystem->put($file->getPathname(), $content);
+        }
+    }
+
+    /**
+     * Rename Stubs.
+     */
+    protected function renameStubs()
+    {
+        $renames = [
+            'src\ServiceProvider.stub' => 'src/[[pascalName]]ServiceProvider.php',
+            '.gitignore.stub' => '.gitignore',
+        ];
+
+        $filesystem = new Filesystem();
+        $files = $filesystem->allFiles($this->packagePath(), true);
+
+        foreach ($files as $file) {
+            if ($file->getExtension() !== 'stub') {
+                continue;
+            }
+
+            $fileName = $renames[$file->getRelativePathname()] ?? null;
+            $newFileName = $this->replacePlaceholders($fileName);
+
+            $newFilePath = $this->packagePath($newFileName);
+            $filesystem->move($file->getPathname(), $newFilePath);
+        }
+    }
+
+    /**
+     * Rename Stubs.
+     */
+    protected function modificationsWithOptions()
+    {
+        if ($this->option('routes') && $this->argument('type') === 'basic') {
+            (new Filesystem)->copyDirectory(
+                __DIR__ . '/../../stubs-options/basic/routes',
+                $this->packagePath()
+            );
+
+            $this->updateStubs();
+            $this->renameStubs();
+        }
+
+        if ($this->option('views') && $this->argument('type') === 'basic') {
+            (new Filesystem)->copyDirectory(
+                __DIR__ . '/../../stubs-options/basic/views',
+                $this->packagePath()
+            );
+
+            $this->updateStubs();
+            $this->renameStubs();
+        }
     }
 
     /**
@@ -65,7 +165,7 @@ class PackageCommand extends Command
     {
         // Package Name - name (my-admin-blog)
         // Package Name - title (My Admin Blog)
-        // Package Name - pascleName (MyAdminBlog)
+        // Package Name - pascalName (MyAdminBlog)
         // Root Namespace - rootNamespace (Laranext\Span\Admin\Blog)
         // Root Namespace - rootNamespaceComposer (Laranext\\Span\\Admin\\Blog)
 
@@ -75,10 +175,10 @@ class PackageCommand extends Command
 
         // rename service provider and replacements...
         $this->replace('{{ rootNamespace }}', $this->rootNamespace(), $this->packagePath('src/ServiceProvider.stub'));
-        $this->replace('{{ pascleName }}', $this->pascleName(), $this->packagePath('src/ServiceProvider.stub'));
+        $this->replace('{{ pascalName }}', $this->pascalName(), $this->packagePath('src/ServiceProvider.stub'));
         (new Filesystem)->move(
             $this->packagePath('src/ServiceProvider.stub'),
-            $this->packagePath( 'src/' . $this->pascleName() . 'ServiceProvider.php' )
+            $this->packagePath( 'src/' . $this->pascalName() . 'ServiceProvider.php' )
         );
 
         // rename .gitignore.stub to .gitignore
@@ -100,11 +200,11 @@ class PackageCommand extends Command
 
         // rename service provider and replacements...
         $this->replace('{{ rootNamespace }}', $this->rootNamespace(), $this->packagePath('src/ServiceProvider.stub'));
-        $this->replace('{{ pascleName }}', $this->pascleName(), $this->packagePath('src/ServiceProvider.stub'));
+        $this->replace('{{ pascalName }}', $this->pascalName(), $this->packagePath('src/ServiceProvider.stub'));
         $this->replace('{{ name }}', $this->argument('package'), $this->packagePath('src/ServiceProvider.stub'));
         (new Filesystem)->move(
             $this->packagePath('src/ServiceProvider.stub'),
-            $this->packagePath( 'src/' . $this->pascleName() . 'ServiceProvider.php' )
+            $this->packagePath( 'src/' . $this->pascalName() . 'ServiceProvider.php' )
         );
     }
 
@@ -116,9 +216,42 @@ class PackageCommand extends Command
         $composer = json_decode(file_get_contents(base_path('composer.json')), true);
         $namespace = $this->rootNamespace().'\\';
 
-        $composer['autoload']['psr-4'][(string) $namespace] = "packages/{$this->argument('package')}/src/";
+        $composer['autoload']['psr-4'][(string) $namespace] = "packages/{$this->name()}/src/";
 
         $composer['autoload']['psr-4'] = collect($composer['autoload']['psr-4'])->sortKeysUsing('strcasecmp')->toArray();
+
+        file_put_contents(
+            base_path('composer.json'),
+            json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
+        );
+    }
+
+    protected function addPackageToRequireDev(): void
+    {
+        $composer = json_decode(file_get_contents(base_path('composer.json')), true);
+
+        $composer['require-dev']['span/'.$this->name()] = 'dev-main';
+
+        file_put_contents(
+            base_path('composer.json'),
+            json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
+        );
+    }
+
+    protected function addPackageToRepositories(): void
+    {
+        $composer = json_decode(file_get_contents(base_path('composer.json')), true);
+
+        $repository = [
+            'type' => 'path',
+            'url' => "./packages/{$this->name()}"
+        ];
+
+        if (!isset($composer['repositories'])) {
+            $composer['repositories'] = [];
+        }
+
+        $composer['repositories'][] = $repository;
 
         file_put_contents(
             base_path('composer.json'),
@@ -135,6 +268,14 @@ class PackageCommand extends Command
     }
 
     /**
+     * Update the project's composer dependencies.
+     */
+    protected function composerUpdate(): void
+    {
+        $this->executeCommand(['composer', 'update']);
+    }
+
+    /**
      * Run the given command as a process.
      */
     protected function executeCommand(array $command): void
@@ -147,5 +288,57 @@ class PackageCommand extends Command
             $type;
             echo $buffer;
         });
+    }
+
+    protected function addPackageToConfigOld()
+    {
+        $configPath = base_path('config/span.php');
+        $config = include($configPath);
+
+        $config['providers'][$this->name()] = $this->rootNamespace() .'\\'. $this->pascalName().'ServiceProvider::class,';
+
+        $configContent = "<?php\n\nreturn " . var_export($config, true) . ";\n";
+
+        file_put_contents($configPath, $configContent);
+    }
+
+    protected function addPackageToConfig()
+    {
+        $configPath = base_path('config/span.php');
+        $configContent = file_get_contents($configPath);
+
+        // Add the provider entry before the closing bracket of the 'providers' array
+        $newEntry = "    '{$this->name()}' => {$this->rootNamespace()}\\{$this->pascalName()}ServiceProvider::class,\n";
+        $pattern = '/(\'providers\' => \[)(.*?)(\],)/s';
+        $replacement = '$1$2' . $newEntry . '    $3';
+        $configContent = preg_replace($pattern, $replacement, $configContent, 1);
+
+        // Write the updated content back to the file
+        file_put_contents($configPath, $configContent);
+    }
+
+    /**
+     * Validate the arguments.
+     */
+    protected function validateArguments(): void
+    {
+        if (! $this->isKebabCase($this->argument('name'))) {
+            $this->fail('The package name must be in kebab-case.');
+        }
+
+        if (! in_array($this->argument('type'), ['basic', 'blade', 'vue', 'vue-thetheme'])) {
+            $this->fail('Invalid package type. Allowed types: basic, blade, vue, vue-thetheme');
+        }
+    }
+
+    public function replacePlaceholders($str)
+    {
+        $replacements = [
+            '[[pascalName]]' => $this->pascalName(),
+            '[[title]]' => $this->title(),
+            '[[name]]' => $this->name(),
+        ];
+
+        return str_replace(array_keys($replacements), array_values($replacements), $str);
     }
 }

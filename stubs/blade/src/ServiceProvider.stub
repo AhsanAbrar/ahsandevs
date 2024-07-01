@@ -1,10 +1,12 @@
 <?php
 
-namespace {{ rootNamespace }};
+namespace [[rootNamespace]];
 
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Laranext\Span\Span;
 
-class {{ pascleName }}ServiceProvider extends ServiceProvider
+class [[pascalName]]ServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
@@ -21,6 +23,8 @@ class {{ pascleName }}ServiceProvider extends ServiceProvider
     {
         $this->bootRoutes();
         $this->bootResources();
+
+        BladeComponents::register();
     }
 
     /**
@@ -30,7 +34,7 @@ class {{ pascleName }}ServiceProvider extends ServiceProvider
     {
         $this->app->extend('view', function ($view) {
             $view->getFinder()->setPaths([
-                base_path('packages/{{ name }}/resources/views'),
+                base_path('packages/[[name]]/resources/views'),
             ]);
 
             return $view;
