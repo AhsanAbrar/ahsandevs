@@ -2,6 +2,7 @@
 
 namespace AhsanDevs;
 
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
 class AhsanDevsServiceProvider extends ServiceProvider
@@ -19,6 +20,11 @@ class AhsanDevsServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // This is temporary, we will move this to support.
+        Blade::directive('viteTags', function (string $expression) {
+            return "<?php echo app(AhsanDev\Support\ViteNew::class)($expression); ?>";
+        });
+
         if (! $this->app->runningInConsole()) {
             return;
         }
