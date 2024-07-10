@@ -12,7 +12,7 @@
 
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
 
-    {{ vite_tags('vendor/[[name]]', 5201, 'main.ts') }}
+    @viteTags
 </head>
 <body>
     {{ $slot }}

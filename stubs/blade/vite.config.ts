@@ -1,14 +1,10 @@
 import { defineConfig } from 'vite'
 import { resolve } from 'path'
-import hot from './hot'
+import ahsandevs from 'ahsandevs-vite-plugin'
 
-const config = {
-  root: 'resources',
-  server: {
-    port: 5201
-  },
+export default defineConfig({
   plugins: [
-    hot(),
+    ahsandevs(),
   ],
   resolve: {
     alias: {
@@ -16,24 +12,11 @@ const config = {
     },
   },
   build: {
-    chunkSizeWarningLimit: 500,
     manifest: true,
     emptyOutDir: true,
-    outDir: '../../../public/vendor/[[name]]',
+    outDir: resolve(__dirname, '../../public/vendor/[[name]]'),
     rollupOptions: {
       input: resolve(__dirname, 'resources/js/main.ts'),
     },
   },
-}
-
-const configProduction = {
-  //
-}
-
-export default defineConfig(({ command }) => {
-  if (command === 'build') {
-    return Object.assign(config, configProduction)
-  }
-
-  return config
 })
