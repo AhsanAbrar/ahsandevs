@@ -23,8 +23,6 @@ class [[pascalName]]ServiceProvider extends ServiceProvider
     {
         $this->bootRoutes();
         $this->bootResources();
-
-        BladeComponents::register();
     }
 
     /**
@@ -47,7 +45,14 @@ class [[pascalName]]ServiceProvider extends ServiceProvider
     protected function bootRoutes(): void
     {
         Route::group([
-            'middleware' => 'web',
+            'middleware' => ['web', 'auth'],
+            'prefix' => Span::prefix().'/api',
+        ], function () {
+            $this->loadRoutesFrom(__DIR__.'/../routes/api.php');
+        });
+
+        Route::group([
+            'middleware' => ['web', 'auth'],
             'prefix' => Span::prefix(),
         ], function () {
             $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
