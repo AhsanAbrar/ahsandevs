@@ -13,6 +13,7 @@
     "ahsandevs-vite-plugin": "^0.1.2",
     "autoprefixer": "^10.4.19",
     "eslint": "^9.6.0",
+    "postcss": "^8.4.39",
     "prettier": "^3.3.2",
     "prettier-plugin-tailwindcss": "^0.6.5",
     "tailwindcss": "^3.4.4",
