@@ -2,6 +2,7 @@
 
 namespace AhsanDevs;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
@@ -24,6 +25,12 @@ class AhsanDevsServiceProvider extends ServiceProvider
         Blade::directive('viteTags', function (string $expression) {
             return "<?php echo app(AhsanDev\Support\ViteNew::class)($expression); ?>";
         });
+
+        Blade::directive('appData', function () {
+            return "<?php echo app(AhsanDev\Support\AppDataDirective::class)(); ?>";
+        });
+
+        Model::unguard();
 
         if (! $this->app->runningInConsole()) {
             return;
