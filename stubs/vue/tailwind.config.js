@@ -4,7 +4,7 @@ import forms from '@tailwindcss/forms'
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: 'class',
-  content: ['./resources/**/*.{js,ts,blade.php}'],
+  content: ['./resources/**/*.{js,ts,tsx,vue,blade.php}'],
   theme: {
     extend: {
       fontFamily: {

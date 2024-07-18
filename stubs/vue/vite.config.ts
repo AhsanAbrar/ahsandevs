@@ -1,10 +1,12 @@
 import { defineConfig } from 'vite'
 import { resolve } from 'path'
 import ahsandevs from 'ahsandevs-vite-plugin'
+import vue from '@vitejs/plugin-vue'
 
 export default defineConfig({
   plugins: [
     ahsandevs(),
+    vue(),
   ],
   resolve: {
     alias: {

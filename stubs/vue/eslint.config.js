@@ -1,27 +1,24 @@
-import globals from 'globals'
-import tsPlugin from '@typescript-eslint/eslint-plugin'
+import ts from 'typescript-eslint'
+import vueParser from 'vue-eslint-parser'
 import tsParser from '@typescript-eslint/parser'
+import vuePlugin from 'eslint-plugin-vue'
 
 export default [
+  ...ts.configs.recommended,
+  ...vuePlugin.configs['flat/recommended'],
   {
-    files: ['resources/js/**/*.{js,ts}'],
+    files: ['resources/js/**/*.{js,ts,tsx,vue}'],
     languageOptions: {
-      globals: globals.browser,
-      parser: tsParser,
+      parser: vueParser,
       parserOptions: {
-        project: './tsconfig.json',
+        parser: tsParser,
+        sourceType: 'module',
       },
     },
-    plugins: {
-      '@typescript-eslint': tsPlugin,
-    },
     rules: {
-      ...tsPlugin.configs.recommended.rules,
-      'semi': ['error', 'never'],
-      'quotes': ['error', 'single'],
-      'no-fallthrough': 'warn',
-      'no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-vars': 'warn',
+      semi: ['error', 'never'],
+      quotes: ['error', 'single'],
+      'vue/max-attributes-per-line': 'off',
     },
   },
 ]

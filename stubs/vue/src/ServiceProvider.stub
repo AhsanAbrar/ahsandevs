@@ -45,14 +45,14 @@ class [[pascalName]]ServiceProvider extends ServiceProvider
     protected function bootRoutes(): void
     {
         Route::group([
-            'middleware' => ['web', 'auth'],
+            'middleware' => 'web',
             'prefix' => Span::prefix().'/api',
         ], function () {
             $this->loadRoutesFrom(__DIR__.'/../routes/api.php');
         });
 
         Route::group([
-            'middleware' => ['web', 'auth'],
+            'middleware' => 'web',
             'prefix' => Span::prefix(),
         ], function () {
             $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
