@@ -32,6 +32,7 @@ class AhsanDevsServiceProvider extends ServiceProvider
         $this->commands([
             Console\InstallCommand::class,
             Console\PackageCommand::class,
+            Console\BaseCommand::class,
         ]);
     }
 }
