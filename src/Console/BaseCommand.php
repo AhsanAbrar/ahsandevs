@@ -70,7 +70,14 @@ class BaseCommand extends Command implements PromptsForMissingInput
 
             $source = __DIR__ . '/../../base/app/Models/User.php';
             $destination = base_path('app/Models/User.php');
+            $filesystem->copy($source, $destination);
 
+            $source = __DIR__ . '/../../base/app/Models/Permission.php';
+            $destination = base_path('app/Models/Permission.php');
+            $filesystem->copy($source, $destination);
+
+            $source = __DIR__ . '/../../base/app/Models/Role.php';
+            $destination = base_path('app/Models/Role.php');
             $filesystem->copy($source, $destination);
         }
     }
