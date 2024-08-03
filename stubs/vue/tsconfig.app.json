@@ -27,7 +27,9 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./resources/js/*"],
+      "types": ["resources/js/types/index.d.ts"],
       "Component/*": ["./resources/js/components/*"],
+      "Store/*": ["./resources/js/stores/*"],
       "Use/*": ["./resources/js/composables/*"],
       "View/*": ["./resources/js/views/*"]
     }

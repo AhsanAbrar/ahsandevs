@@ -11,6 +11,11 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': resolve(__dirname, 'resources/js'),
+      'types': resolve(__dirname, 'resources/js/types/index.d.ts'),
+      'Component': resolve(__dirname, 'resources/js/components'),
+      'Store': resolve(__dirname, 'resources/js/stores'),
+      'Use': resolve(__dirname, 'resources/js/composables'),
+      'View': resolve(__dirname, 'resources/js/views'),
     },
   },
   build: {
