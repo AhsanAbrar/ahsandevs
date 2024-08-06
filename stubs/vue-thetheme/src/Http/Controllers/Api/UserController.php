@@ -3,7 +3,6 @@
 namespace [[rootNamespace]]\Http\Controllers\Api;
 
 use AhsanDev\Support\Field;
-use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -31,16 +30,13 @@ class UserController implements HasMiddleware
      */
     public function index(UserFilters $filters)
     {
-        return User::filter($filters)
-            ->with('roles')
-            ->orderBy('id', 'desc')
-            ->simplePaginate();
+        return User::filter($filters)->simplePaginate();
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create(User $user)
+    public function create(User $user): Field
     {
         return $this->fields($user);
     }
@@ -56,15 +52,15 @@ class UserController implements HasMiddleware
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(User $user): User
     {
-        //
+        return $user;
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(User $user)
+    public function edit(User $user): Field
     {
         return $this->fields($user);
     }
@@ -82,10 +78,8 @@ class UserController implements HasMiddleware
      */
     public function destroy(Request $request)
     {
-        if ($request->items[0] == 1) {
-            return [
-                'message' => 'This User Cannot Delete!',
-            ];
+        if (in_array(1, $request->items, true)) {
+            return ['message' => 'This User Cannot Be Deleted!'];
         }
 
         User::destroy($request->items);
@@ -97,11 +91,13 @@ class UserController implements HasMiddleware
         ];
     }
 
-    public function fields($model)
+    /**
+     * Prepare the form fields for the resource.
+     */
+    protected function fields(User $model): Field
     {
         return Field::make()
             ->field('name', $model->name)
-            ->field('email', $model->email)
-            ->field('role', optional($model->roles->first())->id, Role::options());
+            ->field('email', $model->email);
     }
 }

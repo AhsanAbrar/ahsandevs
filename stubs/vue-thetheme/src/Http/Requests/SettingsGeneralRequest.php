@@ -1,11 +1,10 @@
 <?php
 
-namespace VueThetheme\Http\Requests;
+namespace [[rootNamespace]]\Http\Requests;
 
 use AhsanDev\Support\Requests\FormRequest;
 use AhsanDev\Support\UpdateEnvConfig;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
 
 class SettingsGeneralRequest extends FormRequest
 {
@@ -31,7 +30,6 @@ class SettingsGeneralRequest extends FormRequest
         return [
             'APP_NAME' => 'app_name',
             'APP_URL' => 'app_url',
-            // 'APP_LOCALE' => 'app_locale',
             'APP_TIMEZONE' => 'app_timezone',
         ];
     }

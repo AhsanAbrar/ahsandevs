@@ -1,6 +1,6 @@
 <?php
 
-namespace VueThetheme\Http\Requests;
+namespace [[rootNamespace]]\Http\Requests;
 
 use AhsanDev\Support\Requests\FormRequest;
 use Illuminate\Support\Facades\DB;

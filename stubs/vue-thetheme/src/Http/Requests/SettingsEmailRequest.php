@@ -1,13 +1,13 @@
 <?php
 
-namespace VueThetheme\Http\Requests;
+namespace [[rootNamespace]]\Http\Requests;
 
 use AhsanDev\Support\Requests\FormRequest;
 use AhsanDev\Support\UpdateEnvConfig;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
-use VueThetheme\Notifications\TestMail;
+use [[rootNamespace]]\Notifications\TestMail;
 
 class SettingsEmailRequest extends FormRequest
 {
