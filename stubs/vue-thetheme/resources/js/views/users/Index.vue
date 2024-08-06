@@ -22,7 +22,7 @@
         <TableColumn field="id" sortable />
         <TableColumn field="name" sortable />
         <TableColumn field="email" sortable />
-        <TableColumnActions :edit="Form" delete-it view />
+        <TableColumnActions :edit="Form" delete-it />
       </TableRow>
     </IndexTable>
   </PageContainer>
