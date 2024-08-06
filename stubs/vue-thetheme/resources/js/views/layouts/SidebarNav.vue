@@ -50,6 +50,10 @@
   const path = computed(() => router.currentRoute.value.path)
 
   function isActive(uri: string) {
+    if (uri === '/') {
+      return path.value === uri
+    }
+
     return path.value.startsWith(uri)
   }
 
