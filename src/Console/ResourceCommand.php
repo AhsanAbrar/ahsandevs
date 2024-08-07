@@ -9,7 +9,7 @@ class ResourceCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'ahsandevs:controller {name : The resource name} {package : The span package dir name}';
+    protected $signature = 'ahsandevs:resource {name : The resource name} {package : The span package dir name}';
 
     /**
      * The console command description.
