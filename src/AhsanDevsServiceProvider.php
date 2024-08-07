@@ -40,6 +40,7 @@ class AhsanDevsServiceProvider extends ServiceProvider
             Console\InstallCommand::class,
             Console\PackageCommand::class,
             Console\BaseCommand::class,
+            Console\ResourceCommand::class,
         ]);
     }
 }
