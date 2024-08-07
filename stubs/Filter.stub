@@ -1,0 +1,10 @@
+<?php
+
+namespace [[rootNamespace]]\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class [[pascalName]] extends Model
+{
+    //
+}
