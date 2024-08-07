@@ -2,23 +2,8 @@
 
 namespace AhsanDevs\Console\Concerns;
 
-use Illuminate\Filesystem\Filesystem;
-
 trait CommandHelpers
 {
-    /**
-     * The filesystem instance.
-     */
-    protected Filesystem $filesystem;
-
-    /**
-     * Create a new instance of the trait.
-     */
-    public function __construct()
-    {
-        $this->filesystem = new Filesystem;
-    }
-
     /**
      * Ensure the directory exists.
      */
@@ -27,17 +12,6 @@ trait CommandHelpers
         if (!$this->filesystem->exists($directory)) {
             $this->filesystem->makeDirectory($directory, 0755, true);
         }
-    }
-
-    /**
-     * Determine if the class already exists.
-     *
-     * @param  string  $rawName
-     * @return bool
-     */
-    protected function alreadyExists($path)
-    {
-        return (new Filesystem)->exists($path);
     }
 
     /**
@@ -50,7 +24,7 @@ trait CommandHelpers
      */
     protected function replace($search, $replace, $path)
     {
-        if ((new Filesystem)->exists($path)) {
+        if ($this->filesystem->exists($path)) {
             file_put_contents($path, str_replace($search, $replace, file_get_contents($path)));
         }
     }
@@ -75,7 +49,7 @@ trait CommandHelpers
      */
     protected function renameStub($stub)
     {
-        (new Filesystem)->move($stub, str_replace('.stub', '.php', $stub));
+        $this->filesystem->move($stub, str_replace('.stub', '.php', $stub));
     }
 
     /**
@@ -86,7 +60,7 @@ trait CommandHelpers
     protected function renameStubs()
     {
         foreach ($this->stubsToRename() as $stub) {
-            (new Filesystem)->move($stub, str_replace('.stub', '.php', $stub));
+            $this->filesystem->move($stub, str_replace('.stub', '.php', $stub));
         }
     }
 
