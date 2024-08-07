@@ -28,6 +28,16 @@ class ResourceCommand extends Command
             'package' => $this->argument('package'),
         ]);
 
+        $this->call('ahsandevs:filters', [
+            'name' => $this->argument('name').'Filters',
+            'package' => $this->argument('package'),
+        ]);
+
+        $this->call('ahsandevs:request', [
+            'name' => $this->argument('name').'Request',
+            'package' => $this->argument('package'),
+        ]);
+
         $this->call('ahsandevs:model', [
             'name' => $this->argument('name'),
             'package' => $this->argument('package'),
