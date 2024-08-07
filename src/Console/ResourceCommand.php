@@ -2,21 +2,14 @@
 
 namespace AhsanDevs\Console;
 
-use AhsanDevs\Console\Concerns\CommandHelpers;
-use Illuminate\Console\Command;
-use Illuminate\Contracts\Console\PromptsForMissingInput;
-
-class ResourceCommand extends Command implements PromptsForMissingInput
+class ResourceCommand extends Command
 {
-    use CommandHelpers;
-
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'ahsandevs:resource {name : The span package name} {resource : The resource name}
-                            {--m|model : Add model}';
+    protected $signature = 'ahsandevs:controller {name : The resource name} {package : The span package dir name}';
 
     /**
      * The console command description.
@@ -30,10 +23,13 @@ class ResourceCommand extends Command implements PromptsForMissingInput
      */
     public function handle()
     {
-        // Generate Model
+        $this->call('ahsandevs:controller', [
+            'name' => $this->argument('name'),
+        ]);
+
         $this->call('ahsandevs:model', [
             'name' => $this->argument('name'),
-            'model' => $this->argument('resource'),
+            '--migration' => true,
         ]);
 
         $this->info('Resource generated successfully.');
