@@ -19,21 +19,24 @@ trait StubHelpers
      */
     protected function generateStub(string $from, string $to): void
     {
-        $source = __DIR__ . '/../../stubs/' . $from;
+        $source = __DIR__ . '/../../../stubs/' . $from;
+        $destination = $this->packagePath($to);
 
         if (!$this->filesystem->exists($source)) {
             $this->fail("Stub file does not exist: {$source}");
         }
 
-        if ($this->filesystem->exists($to)) {
-            $this->fail("File already exists: {$to}");
+        if ($this->filesystem->exists($destination)) {
+            $this->fail("File already exists: {$destination}");
         }
 
-        $this->ensureDirectoryExists(dirname($to));
+        $this->ensureDirectoryExists(dirname($destination));
 
-        $this->filesystem->copy($source, $to);
+        $this->filesystem->copy($source, $destination);
 
-        $this->replacePlaceholdersInFile($to);
+        $this->replacePlaceholdersInFile($destination);
+
+        $this->components->info(sprintf('%s [%s] created successfully.', '', $destination));
     }
 
     /**
