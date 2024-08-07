@@ -42,6 +42,7 @@ class AhsanDevsServiceProvider extends ServiceProvider
             Console\BaseCommand::class,
             Console\ResourceCommand::class,
             Console\ModelCommand::class,
+            Console\RequestCommand::class,
         ]);
     }
 }
