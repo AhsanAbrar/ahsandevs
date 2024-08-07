@@ -45,7 +45,7 @@ class PackageCommand extends Command implements PromptsForMissingInput
         $this->info('Creating a new span package...');
 
         (new Filesystem)->copyDirectory(
-            __DIR__ . '/../../stubs/' . $this->argument('type'),
+            __DIR__ . '/../../packages/' . $this->argument('type'),
             $this->packagePath()
         );
 
@@ -139,7 +139,7 @@ class PackageCommand extends Command implements PromptsForMissingInput
     {
         if ($this->option('routes') && $this->argument('type') === 'basic') {
             (new Filesystem)->copyDirectory(
-                __DIR__ . '/../../stubs-options/basic/routes',
+                __DIR__ . '/../../packages-options/basic/routes',
                 $this->packagePath()
             );
 
@@ -149,7 +149,7 @@ class PackageCommand extends Command implements PromptsForMissingInput
 
         if ($this->option('views') && $this->argument('type') === 'basic') {
             (new Filesystem)->copyDirectory(
-                __DIR__ . '/../../stubs-options/basic/views',
+                __DIR__ . '/../../packages-options/basic/views',
                 $this->packagePath()
             );
 
@@ -194,7 +194,7 @@ class PackageCommand extends Command implements PromptsForMissingInput
     protected function addWebRoutes(): void
     {
         (new Filesystem)->copy(
-            __DIR__ . '/../../stubs/package/src/WebRoutesServiceProvider.stub',
+            __DIR__ . '/../../packages/package/src/WebRoutesServiceProvider.stub',
             $this->packagePath('src/ServiceProvider.stub')
         );
 
