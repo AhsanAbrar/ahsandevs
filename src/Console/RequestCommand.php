@@ -2,23 +2,19 @@
 
 namespace AhsanDevs\Console;
 
-use AhsanDevs\Console\Concerns\CommandHelpers;
 use AhsanDevs\Console\Concerns\StubHelpers;
 use AhsanDevs\Console\Concerns\StubReplaceHelpers;
-use Illuminate\Console\Command;
-use Illuminate\Contracts\Console\PromptsForMissingInput;
 
-class RequestCommand extends Command implements PromptsForMissingInput
+class RequestCommand extends Command
 {
-    use CommandHelpers, StubReplaceHelpers, StubHelpers;
+    use StubReplaceHelpers, StubHelpers;
 
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'ahsandevs:request {name : The request name} {package : The span package dir name}
-                            {--r|root : Create in the app root}';
+    protected $signature = 'ahsandevs:request {name : The request name} {package : The span package dir name}';
 
 
     /**
@@ -26,15 +22,13 @@ class RequestCommand extends Command implements PromptsForMissingInput
      *
      * @var string
      */
-    protected $description = 'Generate request';
+    protected $description = 'Generate request class';
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
-        $this->generateStubs([
-            'Model.stub' => 'src/Models/'.$this->pascalName().'.php'
-        ]);
+        $this->generateStub('Request.stub', 'src/Http/Requests/'.$this->pascalName().'Request.php');
     }
 }
