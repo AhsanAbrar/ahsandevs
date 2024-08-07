@@ -2,7 +2,6 @@
 
 namespace AhsanDevs\Console\Concerns;
 
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 
 /**
@@ -33,16 +32,15 @@ trait StubReplaceHelpers
      */
     protected function rootNamespace(): string
     {
-        $files = new Filesystem;
         $package = $this->argument('package');
         $composerPath = base_path("packages/{$package}/composer.json");
 
-        if (!$this->alreadyExists($composerPath)) {
+        if (!$this->files->exists($composerPath)) {
             $this->error("Composer file not found at {$composerPath}");
             return '';
         }
 
-        $composerContent = $files->get($composerPath);
+        $composerContent = $this->files->get($composerPath);
         $composerJson = json_decode($composerContent, true);
 
         if (isset($composerJson['autoload']['psr-4'])) {
