@@ -29,6 +29,6 @@ class RequestCommand extends Command
      */
     public function handle()
     {
-        $this->generateStub('Request.stub', 'src/Http/Requests/'.$this->pascalName().'Request.php');
+        $this->generateStub('Request.stub', 'src/Http/Requests/'.$this->pascalName().'.php');
     }
 }
