@@ -35,12 +35,12 @@ trait StubReplaceHelpers
         $package = $this->argument('package');
         $composerPath = base_path("packages/{$package}/composer.json");
 
-        if (!$this->files->exists($composerPath)) {
+        if (!$this->filesystem->exists($composerPath)) {
             $this->error("Composer file not found at {$composerPath}");
             return '';
         }
 
-        $composerContent = $this->files->get($composerPath);
+        $composerContent = $this->filesystem->get($composerPath);
         $composerJson = json_decode($composerContent, true);
 
         if (isset($composerJson['autoload']['psr-4'])) {
