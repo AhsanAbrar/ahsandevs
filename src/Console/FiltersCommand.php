@@ -29,6 +29,6 @@ class FiltersCommand extends Command
      */
     public function handle()
     {
-        $this->generateStub('Filters.stub', 'src/Http/Filters/'.$this->pascalName().'Filters.php');
+        $this->generateStub('Filters.stub', 'src/Http/Filters/'.$this->pascalName().'.php');
     }
 }
