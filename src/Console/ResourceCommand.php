@@ -24,11 +24,13 @@ class ResourceCommand extends Command
     public function handle()
     {
         $this->call('ahsandevs:controller', [
-            'name' => $this->argument('name'),
+            'name' => $this->argument('name').'Controller',
+            'package' => $this->argument('package'),
         ]);
 
         $this->call('ahsandevs:model', [
             'name' => $this->argument('name'),
+            'package' => $this->argument('package'),
             '--migration' => true,
         ]);
 
