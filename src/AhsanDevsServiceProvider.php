@@ -47,6 +47,9 @@ class AhsanDevsServiceProvider extends ServiceProvider
             Console\ModelCommand::class,
             Console\RequestCommand::class,
 
+            Console\YouCommand::class,
+            Console\YesCommand::class,
+
             Console\VueViewCommand::class,
         ]);
     }

@@ -27,9 +27,18 @@ class YouCommand extends Command implements PromptsForMissingInput
             $options = ['First', 'Second', 'Third'];
 
             // Prompt the user to select an option
-            $package = $this->choice('Please select a package:', $options);
-        }
+            $package = $this->choice('Please select a package:', ['First', 'Second', 'Third'], 0);
+            // $package = $this->anticipate('What is your name?', ['Taylor', 'Dayle']);
 
+            // $package = $this->anticipate('What is your address?', function (string $input) {
+            //     return [
+            //         'First',
+            //         'Second',
+            //         'Third',
+            //     ];
+            // });
+        }
+dd( $this->argument('package') );
         $this->info('Name: ' . $name . ' | Package: ' . $package);
     }
 }
