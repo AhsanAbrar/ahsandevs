@@ -19,8 +19,6 @@ class Command extends BaseCommand implements PromptsForMissingInput
     public function __construct(protected Filesystem $filesystem)
     {
         parent::__construct();
-
-        $this->checkPackageExists();
     }
 
     /**
