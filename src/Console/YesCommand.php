@@ -24,18 +24,18 @@ class YesCommand extends Command implements PromptsForMissingInput
      */
     protected function promptForMissingArguments(InputInterface $input, OutputInterface $output): void
     {
-        $role = select(
-    label: 'What role should the user have?',
-    options: ['Member', 'Contributor', 'Owner']
-);
+//         $role = select(
+//     label: 'What role should the user have?',
+//     options: ['Member', 'Contributor', 'Owner', 'On', 'Owel']
+// );
 
 //         $permissions = multiselect(
 //     label: 'What permissions should be assigned?',
 //     options: ['Read', 'Create', 'Update', 'Delete']
 // );
 
-        // $input->setArgument('package', $this->choice('Please select a package choice:', ['First', 'Second', 'Third'], 0));
-        $input->setArgument('package', $role);
+        $input->setArgument('package', $this->choice('Please select a package choice:', ['First', 'Second', 'Third']));
+        // $input->setArgument('package', $role);
     }
 
     /**
