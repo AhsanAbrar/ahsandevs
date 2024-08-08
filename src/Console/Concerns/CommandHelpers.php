@@ -5,9 +5,9 @@ namespace AhsanDevs\Console\Concerns;
 trait CommandHelpers
 {
     /**
-     * Fail when the package does not exist.
+     * Checks if the specified package exists and fails with an error message if it does not.
      */
-    protected function failWhenPackageDoesNotExist(): void
+    protected function checkPackageExists(): void
     {
         if (! $this->filesystem->exists($this->packagePath())) {
             $this->fail("'" . $this->argument('package') . "'" . ' package does not exist.');
