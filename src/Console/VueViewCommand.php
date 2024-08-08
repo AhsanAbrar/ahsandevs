@@ -14,9 +14,10 @@ class VueViewCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'ahsandevs:view {name : The view name} {dir? : The views dir} {package : The span package dir name}
-                            {--i|index : Generate an index view}
-                            {--f|form : Generate a form view}';
+    protected $signature = 'ahsandevs:vue-view {name : The view name} {package : The span package dir name} {dir? : The views dir}
+                            {--d|detail : Generate a detail view}
+                            {--f|form : Generate a form view}
+                            {--i|index : Generate an index view}';
 
 
     /**
@@ -37,10 +38,28 @@ class VueViewCommand extends Command
             $to = 'resources/js/views/'.$this->argument('dir').'/'.$this->argument('name').'.vue';
         }
 
-        if ($this->option('index')) {
+        if (($this->argument('name') === 'Index' && $this->hasNotAnyOption()) || $this->option('index')) {
             $this->generateStub('VueViewIndex.stub', $to);
-        } elseif ($this->option('form')) {
+        } elseif (($this->argument('name') === 'Form' && $this->hasNotAnyOption()) || $this->option('form')) {
             $this->generateStub('VueViewForm.stub', $to);
+        } elseif (($this->argument('name') === 'Detail' && $this->hasNotAnyOption()) || $this->option('detail')) {
+            $this->generateStub('VueViewDetail.stub', $to);
+        } else {
+            $this->generateStub('VueView.stub', $to);
         }
+    }
+
+    protected function hasNotAnyOption()
+    {
+        $definedOptions = ['detail', 'index', 'form'];
+        $options = $this->options();
+
+        // Check if any of the defined options is set to true
+        $hasTrueOption = array_filter($definedOptions, function ($option) use ($options) {
+            return !empty($options[$option]);
+        });
+
+        // Return true if any of the defined options is true
+        return empty($hasTrueOption);
     }
 }
