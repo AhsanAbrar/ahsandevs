@@ -19,8 +19,6 @@ trait StubHelpers
      */
     protected function generateStub(string $from, string $to): void
     {
-        $this->failWhenPackageDoesNotExist();
-
         $source = __DIR__ . '/../../../stubs/' . $from;
         $destination = $this->packagePath($to);
 
