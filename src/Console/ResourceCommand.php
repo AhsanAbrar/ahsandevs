@@ -50,25 +50,31 @@ class ResourceCommand extends Command
             '--migration' => true,
         ]);
 
-        // $this->addImportToApiRoutes();
-        // $this->addRouteToApiRoutes();
+        $this->call('ahsandevs:vue-view', [
+            'name' => 'Index',
+            'package' => $this->argument('package'),
+            'dir' => $this->pluralName(),
+        ]);
+
+        $this->call('ahsandevs:vue-view', [
+            'name' => 'Form',
+            'package' => $this->argument('package'),
+            'dir' => $this->pluralName(),
+        ]);
+
+        $this->addImportToApiRoutes();
+        $this->addRouteToApiRoutes();
+
+        $this->addImportToVueRoutes();
+        $this->addRouteToVueRoutes();
 
         $this->info('Resource generated successfully.');
     }
 
     /**
-     * Modify package api.php file.
-     */
-    protected function modifyApiRoutes()
-    {
-        $this->addImport();
-        $this->addRoute();
-    }
-
-    /**
      * Add the controller import to the api.php file.
      */
-    protected function addImport(): void
+    protected function addImportToApiRoutes(): void
     {
         new ModifyFile(
             pattern: 'use\s.*;',
@@ -81,12 +87,38 @@ class ResourceCommand extends Command
     /**
      * Add the route line to the api.php file.
      */
-    protected function addRoute(): void
+    protected function addRouteToApiRoutes(): void
     {
         new ModifyFile(
             pattern: "Route::resource\('.*',\s.*::class\);",
             add: "Route::resource('{$this->pluralName()}', {$this->pascalName()}Controller::class);",
             file: $this->packagePath('routes/api.php'),
+            sort: true,
+        );
+    }
+
+    /**
+     * Add the controller import to the api.php file.
+     */
+    protected function addImportToVueRoutes(): void
+    {
+        new ModifyFile(
+            pattern: "import [a-zA-Z0-9]+ from 'View\/.*.vue'",
+            add: "import {$this->pascalName()}Index from 'View/{$this->pluralName()}/Index.vue'",
+            file: $this->packagePath('resources/js/router/routes.ts'),
+            sort: true,
+        );
+    }
+
+    /**
+     * Add the route line to the api.php file.
+     */
+    protected function addRouteToVueRoutes(): void
+    {
+        new ModifyFile(
+            pattern: "\s{2}{ path: '\/[a-z-]+', name: '[a-zA-Z0-9]+Index', component: [a-zA-Z0-9]+Index },",
+            add: "  { path: '/{$this->pluralName()}', name: '{$this->pascalName()}Index', component: {$this->pascalName()}Index },",
+            file: $this->packagePath('resources/js/router/routes.ts'),
             sort: true,
         );
     }
