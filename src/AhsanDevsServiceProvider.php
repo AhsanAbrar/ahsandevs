@@ -46,6 +46,8 @@ class AhsanDevsServiceProvider extends ServiceProvider
             Console\FiltersCommand::class,
             Console\ModelCommand::class,
             Console\RequestCommand::class,
+
+            Console\VueViewCommand::class,
         ]);
     }
 }
