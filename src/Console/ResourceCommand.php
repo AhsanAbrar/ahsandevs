@@ -67,6 +67,7 @@ class ResourceCommand extends Command
 
         $this->addImportToVueRoutes();
         $this->addRouteToVueRoutes();
+        $this->addSidebarItemToVue();
 
         $this->info('Resource generated successfully.');
     }
@@ -120,6 +121,18 @@ class ResourceCommand extends Command
             add: "  { path: '/{$this->pluralName()}', name: '{$this->pascalName()}Index', component: {$this->pascalName()}Index },",
             file: $this->packagePath('resources/js/router/routes.ts'),
             sort: true,
+        );
+    }
+
+    /**
+     * Add the route line to the api.php file.
+     */
+    protected function addSidebarItemToVue(): void
+    {
+        new ModifyFile(
+            pattern: "\s{2}{ label: '[a-zA-Z0-9-_]+', uri: '\/[a-z0-9-]+', icon: [a-zA-Z0-9-_]+Icon },",
+            add: "  { label: '{$this->pluralPascalName()}', uri: '/{$this->pluralName()}', icon: FolderIcon },",
+            file: $this->packagePath('resources/js/composables/sidebar-nav.ts'),
         );
     }
 }
