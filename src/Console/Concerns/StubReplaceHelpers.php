@@ -136,4 +136,12 @@ trait StubReplaceHelpers
     {
         return Str::plural( $this->pascalName() );
     }
+
+    /**
+     * Get the plural pascle case name.
+     */
+    protected function pluralTitle(): string
+    {
+        return Str::plural( $this->title() );
+    }
 }
