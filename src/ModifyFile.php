@@ -34,8 +34,8 @@ class ModifyFile
 
         $group = $this->getMatchedGroup();
         $lines = $this->processLines($group);
-
         $newContent = $this->replaceContent($group, $lines);
+
         $this->writeFileContent($newContent);
     }
 
@@ -53,6 +53,7 @@ class ModifyFile
     protected function getMatchedGroup(): string
     {
         preg_match_all($this->getPattern(), $this->content, $matches);
+
         return $this->last ? end($matches[0]) : $matches[0][0];
     }
 
@@ -63,9 +64,15 @@ class ModifyFile
     {
         $lines = array_unique(array_filter(array_merge(explode("\n", $group), [$this->add])));
 
-        if ($this->sort) {
-            sort($lines);
-        }
+        return $this->sort ? $this->sortLines($lines) : $lines;
+    }
+
+    /**
+     * Sorts the lines if sorting is enabled.
+     */
+    protected function sortLines(array $lines): array
+    {
+        sort($lines);
 
         return $lines;
     }
@@ -77,12 +84,18 @@ class ModifyFile
     {
         $replace = implode("\n", $lines);
 
-        // Add a newline at the end of $replace if the original group ends with a newline
+        return $this->adjustReplaceContent($group, $replace);
+    }
+
+    /**
+     * Adjusts the replacement content to maintain the original formatting.
+     */
+    protected function adjustReplaceContent(string $group, string $replace): string
+    {
         if (substr($group, -1) === "\n" && substr($replace, -1) !== "\n") {
             $replace .= "\n";
         }
 
-        // Replace the matched group with the new content in the original file content
         return str_replace($group, $replace, $this->content);
     }
 
@@ -107,8 +120,7 @@ class ModifyFile
      */
     protected function appendContent(): void
     {
-        $newContent = $this->content . $this->add . "\n";
-        $this->writeFileContent($newContent);
+        $this->writeFileContent($this->content . $this->add . "\n");
     }
 
     /**
