@@ -80,7 +80,14 @@ class ModifyFile
      */
     protected function replaceContent(string $group, array $lines): string
     {
-        $replace = implode("\n", $lines) . "\n";
+        $replace = implode("\n", $lines);
+
+        $groupHasNewlineAtEnd = substr($group, -1) === "\n";
+        $replaceHasNewlineAtEnd = substr($replace, -1) === "\n";
+
+        if ($groupHasNewlineAtEnd && !$replaceHasNewlineAtEnd) {
+            $replace .= "\n";
+        }
 
         return str_replace($group, $replace, $this->content);
     }
