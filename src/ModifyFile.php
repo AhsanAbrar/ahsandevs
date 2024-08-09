@@ -34,7 +34,7 @@ class ModifyFile
 
         $group = $this->getMatchedGroup();
         $lines = $this->processLines($group);
-        $newContent = $this->replaceContent($group, $lines);
+        $newContent = $this->generateNewContent($group, $lines);
 
         $this->writeFileContent($newContent);
     }
@@ -78,19 +78,19 @@ class ModifyFile
     }
 
     /**
-     * Replaces the old content with the new processed content.
+     * Generates the new content based on processed lines and replaces the old content.
      */
-    protected function replaceContent(string $group, array $lines): string
+    protected function generateNewContent(string $group, array $lines): string
     {
         $replace = implode("\n", $lines);
 
-        return $this->adjustReplaceContent($group, $replace);
+        return $this->replaceContent($group, $replace);
     }
 
     /**
-     * Adjusts the replacement content to maintain the original formatting.
+     * Replaces the old content with the new processed content.
      */
-    protected function adjustReplaceContent(string $group, string $replace): string
+    protected function replaceContent(string $group, string $replace): string
     {
         if (substr($group, -1) === "\n" && substr($replace, -1) !== "\n") {
             $replace .= "\n";
