@@ -41,11 +41,11 @@ class ControllerCommand extends Command
     public function handle()
     {
         if ($this->option('invokable')) {
-            $this->generateStub('ControllerInvokable.stub', 'src/Http/Controllers/Api/'.$this->pascalName().'.php');
+            $this->generateStub('ControllerInvokable.stub', 'src/Http/Controllers/Api/'.$this->argument('name').'.php');
         } elseif ($this->option('save')) {
-            $this->generateStub('ControllerSave.stub', 'src/Http/Controllers/Api/'.$this->pascalName().'.php');
+            $this->generateStub('ControllerSave.stub', 'src/Http/Controllers/Api/'.$this->argument('name').'.php');
         } else {
-            $this->generateStub('Controller.stub', 'src/Http/Controllers/Api/'.$this->pascalName().'.php');
+            $this->generateStub('Controller.stub', 'src/Http/Controllers/Api/'.$this->argument('name').'.php');
         }
     }
 }
