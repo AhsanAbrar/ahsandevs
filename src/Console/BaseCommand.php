@@ -2,15 +2,8 @@
 
 namespace AhsanDevs\Console;
 
-use AhsanDevs\Console\Concerns\CommandHelpers;
-use Illuminate\Console\Command;
-use Illuminate\Contracts\Console\PromptsForMissingInput;
-use Illuminate\Filesystem\Filesystem;
-
-class BaseCommand extends Command implements PromptsForMissingInput
+class BaseCommand extends Command
 {
-    use CommandHelpers;
-
     /**
      * The name and signature of the console command.
      *
@@ -48,12 +41,11 @@ class BaseCommand extends Command implements PromptsForMissingInput
      */
     protected function addOptions(): void
     {
-        $filesystem = new Filesystem;
         $source = __DIR__ . '/../../base/database/migrations/0002_02_02_000001_create_options_table.php';
         $destination = base_path('database/migrations/0002_02_02_000001_create_options_table.php');
 
-        if (!$filesystem->exists($destination)) {
-            $filesystem->copy($source, $destination);
+        if (!$this->filesystem->exists($destination)) {
+            $this->filesystem->copy($source, $destination);
         }
     }
 
@@ -62,24 +54,23 @@ class BaseCommand extends Command implements PromptsForMissingInput
      */
     protected function addAuthorization(): void
     {
-        $filesystem = new Filesystem;
         $source = __DIR__ . '/../../base/database/migrations/0002_02_02_000002_create_authorizations_table.php';
         $destination = base_path('database/migrations/0002_02_02_000002_create_authorizations_table.php');
 
-        if (!$filesystem->exists($destination)) {
-            $filesystem->copy($source, $destination);
+        if (!$this->filesystem->exists($destination)) {
+            $this->filesystem->copy($source, $destination);
 
             $source = __DIR__ . '/../../base/app/Models/User.php';
             $destination = base_path('app/Models/User.php');
-            $filesystem->copy($source, $destination);
+            $this->filesystem->copy($source, $destination);
 
             $source = __DIR__ . '/../../base/app/Models/Permission.php';
             $destination = base_path('app/Models/Permission.php');
-            $filesystem->copy($source, $destination);
+            $this->filesystem->copy($source, $destination);
 
             $source = __DIR__ . '/../../base/app/Models/Role.php';
             $destination = base_path('app/Models/Role.php');
-            $filesystem->copy($source, $destination);
+            $this->filesystem->copy($source, $destination);
         }
     }
 }
