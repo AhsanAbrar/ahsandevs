@@ -62,7 +62,10 @@ class ModifyFile
      */
     protected function processLines(string $group): array
     {
-        $lines = array_unique(array_filter(array_merge(explode("\n", $group), [$this->add])));
+        $lines = explode("\n", $group);
+        $lines[] = $this->add;
+
+        $lines = array_values(array_unique(array_filter($lines)));
 
         return $this->sort ? $this->sortLines($lines) : $lines;
     }
