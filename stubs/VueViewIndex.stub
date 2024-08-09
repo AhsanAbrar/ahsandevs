@@ -1,10 +1,38 @@
-<?php
+<template>
+  <PageContainer :loading="index.initializing">
+    <div class="mb-4 flex">
+      <h1 class="text-2xl font-semibold text-gray-900">
+        {{ __('[[title]]') }}
+      </h1>
 
-namespace [[rootNamespace]]\Models;
+      <div class="flex ltr:ml-auto rtl:mr-auto">
+        <button
+          v-if="can('[[name]]:create')"
+          type="button"
+          class="rounded-md bg-blue-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 ltr:ml-4 rtl:mr-4"
+          @click="useModalStore().add(Form)"
+        >
+          {{ __('Create [[pascalName]]') }}
+        </button>
+      </div>
+    </div>
 
-use Illuminate\Database\Eloquent\Model;
+    <IndexTable :name="name">
+      <TableRow v-for="row in index.data" :key="row.id" :row="row">
+        <TableColumn field="id" sortable />
+        <TableColumnActions :edit="Form" delete-it />
+      </TableRow>
+    </IndexTable>
+  </PageContainer>
+</template>
 
-class [[pascalName]] extends Model
-{
-    //
-}
+<script setup lang="ts">
+  import { useIndexStore, useModalStore } from 'ahsandevs'
+  import { PageContainer, IndexTable, TableRow, TableColumn, TableColumnActions } from 'thetheme'
+  import Form from './Form.vue'
+
+  const name = '[[name]]'
+  const index = useIndexStore<[[pascalName]]>(name)()
+
+  index.init({ uri: '[[pluralName]]' })
+</script>

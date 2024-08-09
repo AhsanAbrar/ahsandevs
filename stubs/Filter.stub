@@ -1,10 +1,48 @@
 <?php
 
-namespace [[rootNamespace]]\Models;
+namespace [[rootNamespace]]\Http\Filters;
 
-use Illuminate\Database\Eloquent\Model;
+use AhsanDev\Support\Filters\Filter;
+use Illuminate\Database\Eloquent\Builder;
 
-class [[pascalName]] extends Model
+class [[pascalName]] extends Filter
 {
-    //
+    /**
+     * The displayable name of the filter.
+     *
+     * @var string
+     */
+    public $name = '[[pascalName]]';
+
+    /**
+     * The filter's component.
+     *
+     * @var string
+     */
+    public $component = 'filter-select';
+
+    /**
+     * The attribute / column name of the field.
+     *
+     * @var string
+     */
+    public $attribute = '[[name]]';
+
+    /**
+     * Apply the filter to the given query.
+     */
+    public function apply(Builder $query, $value): void
+    {
+        //
+    }
+
+    /**
+     * Get the filter's available options.
+     */
+    public function options(): array
+    {
+        return [
+            //
+        ];
+    }
 }

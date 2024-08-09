@@ -1,10 +1,18 @@
 <?php
 
-namespace [[rootNamespace]]\Models;
+namespace [[rootNamespace]]\Http\Filters;
 
-use Illuminate\Database\Eloquent\Model;
+use AhsanDev\Support\Filters\Filters;
 
-class [[pascalName]] extends Model
+class [[pascalName]] extends Filters
 {
-    //
+    /**
+     * Get the filters available for the resource.
+     */
+    public function filters(): array
+    {
+        return [
+            //
+        ];
+    }
 }

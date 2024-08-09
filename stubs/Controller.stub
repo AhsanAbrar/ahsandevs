@@ -1,10 +1,97 @@
 <?php
 
-namespace [[rootNamespace]]\Models;
+namespace [[rootNamespace]]\Http\Controllers\Api;
 
-use Illuminate\Database\Eloquent\Model;
+use AhsanDev\Support\Field;
+use [[rootNamespace]]\Models\[[pascalName]];
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
+use [[rootNamespace]]\Http\Filters\[[pascalName]]Filters;
+use [[rootNamespace]]\Http\Requests\[[pascalName]]Request;
 
-class [[pascalName]] extends Model
+class [[pascalName]]Controller implements HasMiddleware
 {
-    //
+    /**
+     * Get the middleware that should be assigned to the controller.
+     */
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('can:[[name]]:view', only: ['index']),
+            new Middleware('can:[[name]]:create', only: ['create', 'store']),
+            new Middleware('can:[[name]]:update', only: ['edit', 'update']),
+            new Middleware('can:[[name]]:delete', only: ['destroy']),
+        ];
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function index([[pascalName]]Filters $filters)
+    {
+        return [[pascalName]]::filter($filters)->simplePaginate();
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create([[pascalName]] $[[name]]): Field
+    {
+        return $this->fields($[[name]]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request, [[pascalName]] $[[name]])
+    {
+        return new [[pascalName]]Request($request, $[[name]]);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show([[pascalName]] $[[name]]): [[pascalName]]
+    {
+        return $[[name]];
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit([[pascalName]] $[[name]]): Field
+    {
+        return $this->fields($[[name]]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, [[pascalName]] $[[name]])
+    {
+        return new [[pascalName]]Request($request, $[[name]]);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Request $request)
+    {
+        [[pascalName]]::destroy($request->items);
+
+        return [
+            'message' => count($request->items) > 1
+                ? '[[pluralPascalName]] Deleted Successfully!'
+                : '[[pascalName]] Deleted Successfully!',
+        ];
+    }
+
+    /**
+     * Prepare the form fields for the resource.
+     */
+    protected function fields([[pascalName]] $model): Field
+    {
+        return Field::make();
+    }
 }

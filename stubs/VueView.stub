@@ -1,10 +1,9 @@
-<?php
+<template>
+  <PageContainer>
 
-namespace [[rootNamespace]]\Models;
+  </PageContainer>
+</template>
 
-use Illuminate\Database\Eloquent\Model;
-
-class [[pascalName]] extends Model
-{
-    //
-}
+<script setup lang="ts">
+  import { PageContainer } from 'thetheme'
+</script>

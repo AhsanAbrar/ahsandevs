@@ -1,10 +1,23 @@
-<?php
+<template>
+  <FormModal :id="id" :name="name" uri="[[pluralName]]">
+  </FormModal>
+</template>
 
-namespace [[rootNamespace]]\Models;
+<script setup lang="ts">
+  import { FormModal } from 'thetheme'
+  import { useFormStore, useModalStore, useIndexStore } from 'ahsandevs'
 
-use Illuminate\Database\Eloquent\Model;
+  defineProps<{
+    id?: number
+  }>()
 
-class [[pascalName]] extends Model
-{
-    //
-}
+  const name = '[[name]]'
+  const form = useFormStore(name)()
+  const index = useIndexStore<[[pascalName]]>(name)()
+
+  form.onSuccess((response) => {
+    index.updateOrCreate(response.model)
+
+    useModalStore().pop()
+  })
+</script>
