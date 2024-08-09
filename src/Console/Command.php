@@ -7,7 +7,7 @@ use Illuminate\Console\Command as BaseCommand;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\File;
-use function Laravel\Prompts\select;
+// use function Laravel\Prompts\select;
 
 class Command extends BaseCommand implements PromptsForMissingInput
 {
