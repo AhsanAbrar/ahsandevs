@@ -9,6 +9,13 @@ namespace AhsanDevs;
  */
 class ModifyFile
 {
+    /**
+     * The content of the file being processed.
+     *
+     * @var string
+     */
+    protected string $content;
+
     public function __construct(
         protected string $pattern,
         protected string $add,
