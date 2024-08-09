@@ -3,6 +3,7 @@
 namespace AhsanDevs\Console;
 
 use AhsanDevs\Console\Concerns\CommandHelpers;
+use AhsanDevs\Console\Concerns\PackageReplaceHelpers;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Filesystem\Filesystem;
@@ -10,14 +11,22 @@ use Symfony\Component\Process\Process;
 
 class PackageCommand extends Command implements PromptsForMissingInput
 {
-    use CommandHelpers;
+    use CommandHelpers, PackageReplaceHelpers;
+
+    /**
+     * Create a new instance of the command.
+     */
+    public function __construct(protected Filesystem $filesystem)
+    {
+        parent::__construct();
+    }
 
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'ahsandevs:package {name : The span package name} {type=basic : The span package type}
+    protected $signature = 'ahsandevs:package {package : The span package name} {type=basic : The span package type}
                             {--routes : Add web routes to the basic package}
                             {--views : Add web routes and views to the basic package}
                             {--namespace= : The root namespace of the package if it is different from package name}
@@ -45,7 +54,7 @@ class PackageCommand extends Command implements PromptsForMissingInput
 
         $this->info('Creating a new span package...');
 
-        (new Filesystem)->copyDirectory(
+        $this->filesystem->copyDirectory(
             __DIR__ . '/../../packages/' . $this->argument('type'),
             $this->packagePath()
         );
@@ -87,11 +96,10 @@ class PackageCommand extends Command implements PromptsForMissingInput
      */
     protected function updateStubs(): void
     {
-        $filesystem = new Filesystem();
-        $files = $filesystem->allFiles($this->packagePath());
+        $files = $this->filesystem->allFiles($this->packagePath());
 
         foreach ($files as $file) {
-            $stub = $filesystem->get($file);
+            $stub = $this->filesystem->get($file);
 
             $replacements = [
                 '[[name]]' => $this->name(),
@@ -103,7 +111,7 @@ class PackageCommand extends Command implements PromptsForMissingInput
 
             $content = str_replace(array_keys($replacements), array_values($replacements), $stub);
 
-            $filesystem->put($file->getPathname(), $content);
+            $this->filesystem->put($file->getPathname(), $content);
         }
     }
 
@@ -117,8 +125,7 @@ class PackageCommand extends Command implements PromptsForMissingInput
             '.gitignore.stub' => '.gitignore',
         ];
 
-        $filesystem = new Filesystem();
-        $files = $filesystem->allFiles($this->packagePath(), true);
+        $files = $this->filesystem->allFiles($this->packagePath(), true);
 
         foreach ($files as $file) {
             if ($file->getExtension() !== 'stub') {
@@ -129,7 +136,7 @@ class PackageCommand extends Command implements PromptsForMissingInput
             $newFileName = $this->replacePlaceholders($fileName);
 
             $newFilePath = $this->packagePath($newFileName);
-            $filesystem->move($file->getPathname(), $newFilePath);
+            $this->filesystem->move($file->getPathname(), $newFilePath);
         }
     }
 
@@ -139,7 +146,7 @@ class PackageCommand extends Command implements PromptsForMissingInput
     protected function modificationsWithOptions()
     {
         if ($this->option('routes') && $this->argument('type') === 'basic') {
-            (new Filesystem)->copyDirectory(
+            $this->filesystem->copyDirectory(
                 __DIR__ . '/../../packages-options/basic/routes',
                 $this->packagePath()
             );
@@ -149,7 +156,7 @@ class PackageCommand extends Command implements PromptsForMissingInput
         }
 
         if ($this->option('views') && $this->argument('type') === 'basic') {
-            (new Filesystem)->copyDirectory(
+            $this->filesystem->copyDirectory(
                 __DIR__ . '/../../packages-options/basic/views',
                 $this->packagePath()
             );
@@ -177,13 +184,13 @@ class PackageCommand extends Command implements PromptsForMissingInput
         // rename service provider and replacements...
         $this->replace('{{ rootNamespace }}', $this->rootNamespace(), $this->packagePath('src/ServiceProvider.stub'));
         $this->replace('{{ pascalName }}', $this->pascalName(), $this->packagePath('src/ServiceProvider.stub'));
-        (new Filesystem)->move(
+        $this->filesystem->move(
             $this->packagePath('src/ServiceProvider.stub'),
             $this->packagePath( 'src/' . $this->pascalName() . 'ServiceProvider.php' )
         );
 
         // rename .gitignore.stub to .gitignore
-        (new Filesystem)->move(
+        $this->filesystem->move(
             $this->packagePath('.gitignore.stub'),
             $this->packagePath('.gitignore')
         );
@@ -194,7 +201,7 @@ class PackageCommand extends Command implements PromptsForMissingInput
      */
     protected function addWebRoutes(): void
     {
-        (new Filesystem)->copy(
+        $this->filesystem->copy(
             __DIR__ . '/../../packages/package/src/WebRoutesServiceProvider.stub',
             $this->packagePath('src/ServiceProvider.stub')
         );
@@ -203,7 +210,7 @@ class PackageCommand extends Command implements PromptsForMissingInput
         $this->replace('{{ rootNamespace }}', $this->rootNamespace(), $this->packagePath('src/ServiceProvider.stub'));
         $this->replace('{{ pascalName }}', $this->pascalName(), $this->packagePath('src/ServiceProvider.stub'));
         $this->replace('{{ name }}', $this->argument('package'), $this->packagePath('src/ServiceProvider.stub'));
-        (new Filesystem)->move(
+        $this->filesystem->move(
             $this->packagePath('src/ServiceProvider.stub'),
             $this->packagePath( 'src/' . $this->pascalName() . 'ServiceProvider.php' )
         );
@@ -323,7 +330,7 @@ class PackageCommand extends Command implements PromptsForMissingInput
      */
     protected function validateArguments(): void
     {
-        if (! $this->isKebabCase($this->argument('name'))) {
+        if (! $this->isKebabCase($this->argument('package'))) {
             $this->fail('The package name must be in kebab-case.');
         }
 
