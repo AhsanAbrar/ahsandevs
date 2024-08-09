@@ -53,13 +53,15 @@ class ResourceCommand extends Command
         $this->call('ahsandevs:vue-view', [
             'name' => 'Index',
             'package' => $this->argument('package'),
-            'dir' => $this->pluralName(),
+            '--dir' => $this->pluralName(),
+            '--resource' => $this->argument('name'),
         ]);
 
         $this->call('ahsandevs:vue-view', [
             'name' => 'Form',
             'package' => $this->argument('package'),
-            'dir' => $this->pluralName(),
+            '--dir' => $this->pluralName(),
+            '--resource' => $this->argument('name'),
         ]);
 
         $this->addImportToApiRoutes();
