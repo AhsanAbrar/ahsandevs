@@ -55,6 +55,7 @@ trait StubHelpers
             '[[pascalName]]' => $this->pascalName(),
             '[[pluralPascalName]]' => $this->pluralPascalName(),
             '[[title]]' => $this->title(),
+            '[[pluralTitle]]' => $this->pluralTitle(),
         ];
 
         $content = str_replace(array_keys($replacements), array_values($replacements), $stub);
