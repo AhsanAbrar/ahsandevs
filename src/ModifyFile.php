@@ -53,7 +53,6 @@ class ModifyFile
     protected function getMatchedGroup(): string
     {
         preg_match_all($this->getPattern(), $this->content, $matches);
-
         return $this->last ? end($matches[0]) : $matches[0][0];
     }
 
@@ -62,11 +61,7 @@ class ModifyFile
      */
     protected function processLines(string $group): array
     {
-        $lines = explode("\n", $group);
-        $lines[] = $this->add;
-
-        $lines = array_values(array_filter($lines));
-        $lines = array_unique($lines);
+        $lines = array_unique(array_filter(array_merge(explode("\n", $group), [$this->add])));
 
         if ($this->sort) {
             sort($lines);
@@ -82,13 +77,12 @@ class ModifyFile
     {
         $replace = implode("\n", $lines);
 
-        $groupHasNewlineAtEnd = substr($group, -1) === "\n";
-        $replaceHasNewlineAtEnd = substr($replace, -1) === "\n";
-
-        if ($groupHasNewlineAtEnd && !$replaceHasNewlineAtEnd) {
+        // Add a newline at the end of $replace if the original group ends with a newline
+        if (substr($group, -1) === "\n" && substr($replace, -1) !== "\n") {
             $replace .= "\n";
         }
 
+        // Replace the matched group with the new content in the original file content
         return str_replace($group, $replace, $this->content);
     }
 
