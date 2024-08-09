@@ -14,7 +14,9 @@ class VueViewCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'ahsandevs:vue-view {name : The view name} {package : The span package dir name} {dir? : The views dir}
+    protected $signature = 'ahsandevs:vue-view {name : The view name} {package : The span package dir name}
+                            {--r|resource= : Resource name for the view to replacements}
+                            {--D|dir= : The view dir name}
                             {--d|detail : Generate a detail view}
                             {--f|form : Generate a form view}
                             {--i|index : Generate an index view}';
@@ -28,14 +30,22 @@ class VueViewCommand extends Command
     protected $description = 'Generate vue view';
 
     /**
+     * Get the name argument.
+     */
+    protected function getNameArgument(): string
+    {
+        return $this->option('resource') ?? $this->argument('name');
+    }
+
+    /**
      * Execute the console command.
      */
     public function handle()
     {
         $to = 'resources/js/views/'.$this->argument('name').'.vue';
 
-        if ($this->argument('dir')) {
-            $to = 'resources/js/views/'.$this->argument('dir').'/'.$this->argument('name').'.vue';
+        if ($this->option('dir')) {
+            $to = 'resources/js/views/'.$this->option('dir').'/'.$this->argument('name').'.vue';
         }
 
         if (($this->argument('name') === 'Index' && $this->hasNotAnyOption()) || $this->option('index')) {
