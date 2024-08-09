@@ -67,6 +67,7 @@ class ResourceCommand extends Command
 
         $this->addImportToVueRoutes();
         $this->addRouteToVueRoutes();
+        $this->addSidebarFolderIconToVue();
         $this->addSidebarItemToVue();
 
         $this->info('Resource generated successfully.');
@@ -133,6 +134,18 @@ class ResourceCommand extends Command
             pattern: "\s{2}{ label: '[a-zA-Z0-9-_]+', uri: '\/[a-z0-9-]+', icon: [a-zA-Z0-9-_]+Icon },",
             add: "  { label: '{$this->pluralPascalName()}', uri: '/{$this->pluralName()}', icon: FolderIcon },",
             file: $this->packagePath('resources/js/composables/sidebar-nav.ts'),
+        );
+    }
+
+    /**
+     * Add the route line to the api.php file.
+     */
+    protected function addSidebarFolderIconToVue(): void
+    {
+        $this->replace(
+            "import { HomeIcon, UserIcon } from '@heroicons/vue/24/outline'",
+            "import { FolderIcon, HomeIcon, UserIcon } from '@heroicons/vue/24/outline'",
+            $this->packagePath('resources/js/composables/sidebar-nav.ts'),
         );
     }
 }

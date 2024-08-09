@@ -38,18 +38,17 @@ class AhsanDevsServiceProvider extends ServiceProvider
 
         $this->commands([
             Console\InstallCommand::class,
-            Console\PackageCommand::class,
             Console\BaseCommand::class,
+
+            Console\PackageCommand::class,
+
             Console\ResourceCommand::class,
+
             Console\ControllerCommand::class,
             Console\FilterCommand::class,
             Console\FiltersCommand::class,
             Console\ModelCommand::class,
             Console\RequestCommand::class,
-
-            Console\YouCommand::class,
-            Console\YesCommand::class,
-            Console\MyCommand::class,
 
             Console\VueViewCommand::class,
         ]);
