@@ -18,13 +18,21 @@ use Illuminate\Support\Str;
 trait StubReplaceHelpers
 {
     /**
+     * Get the name argument.
+     */
+    protected function getNameArgument(): string
+    {
+        return $this->argument('name');
+    }
+
+    /**
      * Get the package name.
      *
      * @return string
      */
     protected function name()
     {
-        return Str::lower($this->argument('name'));
+        return Str::lower($this->getNameArgument());
     }
 
     /**
@@ -54,23 +62,13 @@ trait StubReplaceHelpers
     }
 
     /**
-     * Get the root namespace for composer.
-     *
-     * @return string
-     */
-    protected function rootNamespaceComposer()
-    {
-        return $this->option('namespace') ? str_replace('/', '\\\\', $this->option('namespace')) : Str::studly($this->argument('name'));
-    }
-
-    /**
      * Get the camel case.
      *
      * @return string
      */
     protected function camel()
     {
-        return Str::camel($this->argument('name'));
+        return Str::camel($this->getNameArgument());
     }
 
     /**
@@ -80,7 +78,7 @@ trait StubReplaceHelpers
      */
     protected function kebab()
     {
-        return Str::kebab($this->argument('name'));
+        return Str::kebab($this->getNameArgument());
     }
 
     /**
@@ -90,7 +88,7 @@ trait StubReplaceHelpers
      */
     protected function kebabPlural()
     {
-        return Str::kebab(Str::plural( $this->argument('name') ));
+        return Str::kebab(Str::plural( $this->getNameArgument() ));
     }
 
     /**
@@ -100,7 +98,7 @@ trait StubReplaceHelpers
      */
     protected function plural()
     {
-        return Str::plural( $this->argument('name') );
+        return Str::plural( $this->getNameArgument() );
     }
 
     /**
@@ -110,7 +108,7 @@ trait StubReplaceHelpers
      */
     protected function title()
     {
-        return Str::of($this->argument('name'))->replace('-', ' ')->title();
+        return Str::of($this->getNameArgument())->replace('-', ' ')->title();
     }
 
     /**
@@ -120,7 +118,7 @@ trait StubReplaceHelpers
      */
     protected function pascalName()
     {
-        return Str::studly( $this->argument('name') );
+        return Str::studly( $this->getNameArgument() );
     }
 
     /**
