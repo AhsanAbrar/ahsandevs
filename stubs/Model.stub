@@ -2,9 +2,10 @@
 
 namespace [[rootNamespace]]\Models;
 
+use AhsanDev\Support\Filters\Filterable;
 use Illuminate\Database\Eloquent\Model;
 
 class [[pascalName]] extends Model
 {
-    //
+    use Filterable;
 }
