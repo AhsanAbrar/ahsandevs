@@ -65,8 +65,8 @@ class ModifyMethod
     protected function generateNewContent(): string
     {
         $replacement = $this->prepend
-            ? "$1$2{$this->addSpaces()}{$this->add}\n$3$4"
-            : "$1$2$3{$this->addSpaces()}{$this->add}\n$4";
+            ? "$1$2{$this->add}\n$3$4"
+            : "$1$2$3{$this->add}\n$4";
 
         return preg_replace($this->getPattern(), $replacement, $this->content);
     }
