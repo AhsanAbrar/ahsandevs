@@ -39,24 +39,42 @@ class ModifyItems
     {
         $this->content = $this->readFileContent();
         $this->matches = $this->getMatches();
+        $indentation = "";
+
         // Extract the indentation
-        $indentation = $matches[4];
+        // $indentation = $matches[4];
 
         // Extract existing items and format them
-        $existingItems = $matches[2];
+        $existingItems = $this->matches[2];
+        // dd($existingItems);
+
         $existingItemsArray = $this->parseItems($existingItems);
-        $combinedItems = array_merge($existingItemsArray, $this->add);
+        // dd($existingItemsArray);
+
+        // Ensure $this->add is an array
+        $addArray = is_array($this->add) ? $this->add : [$this->add];
+
+        $combinedItems = array_merge($existingItemsArray, $addArray);
+        // dd($combinedItems);
 
         // Remove duplicates and sort items
         $combinedItems = array_unique($combinedItems);
-        sort($combinedItems);
+        // dd($combinedItems);
+
+        if ($this->sort) {
+            sort($combinedItems);
+        }
+
+        // dd($combinedItems);
 
         // Format the updated items with proper indentation
         $formattedItems = $this->formatItems($combinedItems, $indentation);
+        // dd($formattedItems);
 
         // Prepare the new content with correct formatting
-        $replacement = $matches[1] . $formattedItems . "\n" . $indentation . '];';
-        $newContent = str_replace($matches[0], $replacement, $fileContent);
+        $replacement = $this->matches[1] . $formattedItems . "\n" . $indentation . $this->end;
+
+        $newContent = str_replace($this->matches[0], $replacement, $this->content);
 
         $this->writeFileContent($newContent);
     }
@@ -112,6 +130,7 @@ class ModifyItems
     protected function parseItems(string $items): array
     {
         preg_match_all('/^\s*\'(.*?)\',\s*$/m', $items, $matches);
+
         return $matches[1];
     }
 }
