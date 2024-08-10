@@ -2,6 +2,8 @@
 
 namespace AhsanDevs;
 
+use Exception;
+
 /**
  * Class ModifyMethod
  *
@@ -37,7 +39,11 @@ class ModifyMethod
         $this->content = $this->readFileContent();
 
         if (!$this->patternExists()) {
-            throw new \Exception('Method not found');
+            throw new Exception(sprintf(
+                'The method "%s" was not found in the file "%s".',
+                $this->method,
+                $this->file
+            ));
         }
 
         $newContent = $this->generateNewContent();
@@ -94,7 +100,8 @@ class ModifyMethod
      */
     protected function getPattern(): string
     {
-        return "/(\b{$this->getEscapedParenthesesMethod()})(\s*\{)([\s\S]*?)(\s*})/m";
+        return "/(^\s{{$this->spaces}}{$this->getEscapedParenthesesMethod()}\n)(\s*\{\n)([\s\S]*?\n)(\s{{$this->spaces}}\})/m";
+        return "/(\b{$this->getEscapedParenthesesMethod()}\n)(\s*\{\n)([\s\S]*?\n)(\s{{$this->spaces}}\})/m";
     }
 
     /**
