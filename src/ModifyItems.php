@@ -39,6 +39,7 @@ class ModifyItems
     {
         $this->content = $this->readFileContent();
         $this->matches = $this->getMatches();
+        // dd($this->matches);
 
         // Extract the indentation
         $indentation = "";
@@ -131,7 +132,7 @@ class ModifyItems
 
     protected function parseItems(string $items): array
     {
-        preg_match_all('/^\s*\'(.*?)\',\s*$/m', $items, $matches);
+        preg_match_all('/^\s*(.*?),\s*$/m', $items, $matches);
 
         return $matches[1];
     }
