@@ -36,6 +36,10 @@ class BaseCommand extends Command
             $this->addAuthorization();
         }
 
+        if ($this->option('required-seeder')) {
+            $this->addRequiredSeeder();
+        }
+
         $this->info('Laravel base updated successfully.');
     }
 
@@ -90,7 +94,7 @@ class BaseCommand extends Command
 
             new ModifyMethod(
                 'public function run(): void',
-                "\n\$this->call(RequiredSeeder::class);",
+                "\n" . str_repeat(' ', 8) . '$this->call(RequiredSeeder::class);',
                 base_path('database/seeders/DatabaseSeeder.php')
             );
         }
