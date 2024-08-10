@@ -2,6 +2,8 @@
 
 namespace AhsanDevs\Console;
 
+use AhsanDevs\ModifyMethod;
+
 class BaseCommand extends Command
 {
     /**
@@ -10,6 +12,7 @@ class BaseCommand extends Command
      * @var string
      */
     protected $signature = 'ahsandevs:base
+                            {--required-seeder : Add required seeder}
                             {--authorization : Add authorization support}
                             {--options : Add options migrations}';
 
@@ -71,6 +74,25 @@ class BaseCommand extends Command
             $source = __DIR__ . '/../../base/app/Models/Role.php';
             $destination = base_path('app/Models/Role.php');
             $this->filesystem->copy($source, $destination);
+        }
+    }
+
+    /**
+     * Add Required Seeder.
+     */
+    protected function addRequiredSeeder(): void
+    {
+        $source = __DIR__ . '/../../base/database/seeders/RequiredSeeder.php';
+        $destination = base_path('database/seeders/RequiredSeeder.php');
+
+        if (!$this->filesystem->exists($destination)) {
+            $this->filesystem->copy($source, $destination);
+
+            new ModifyMethod(
+                'public function run(): void',
+                "\n\$this->call(RequiredSeeder::class);",
+                base_path('database/seeders/DatabaseSeeder.php')
+            );
         }
     }
 }
