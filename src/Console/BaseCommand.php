@@ -12,6 +12,7 @@ class BaseCommand extends Command
      * @var string
      */
     protected $signature = 'ahsandevs:base
+                            {--redirect-middleware : Add redirect middleware}
                             {--required-seeder : Add required seeder}
                             {--authorization : Add authorization support}
                             {--options : Add options migrations}';
@@ -38,6 +39,10 @@ class BaseCommand extends Command
 
         if ($this->option('required-seeder')) {
             $this->addRequiredSeeder();
+        }
+
+        if ($this->option('redirect-middleware')) {
+            $this->addRedirectMiddleware();
         }
 
         $this->info('Laravel base updated successfully.');
@@ -98,5 +103,16 @@ class BaseCommand extends Command
                 base_path('database/seeders/DatabaseSeeder.php')
             );
         }
+    }
+
+    /**
+     * Add Redirect Middleware.
+     */
+    protected function addRedirectMiddleware(): void
+    {
+        $source = __DIR__ . '/../../base/bootstrap/app.php';
+        $destination = base_path('bootstrap/app.php');
+
+        $this->filesystem->copy($source, $destination);
     }
 }
