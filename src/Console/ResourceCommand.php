@@ -165,10 +165,10 @@ class ResourceCommand extends Command
         $filePath = base_path('database/seeders/RequiredSeeder.php');
 
         $newPermissions = [
-            $this->name().':create',
-            $this->name().':delete',
-            $this->name().':update',
-            $this->name().':view',
+            "'{$this->name()}:create',",
+            "'{$this->name()}:delete',",
+            "'{$this->name()}:update',",
+            "'{$this->name()}:view',",
         ];
 
         new ModifyItems(
