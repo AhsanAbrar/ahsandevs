@@ -130,6 +130,7 @@ class ModifyItems
      */
     protected function getPattern(): string
     {
+        return sprintf('/(%s\n)([\s\S]*?)(\n(\s*)%s)/', preg_quote($this->start), $this->end);
         return sprintf('/(%s\n)([\s\S]*?)(\n(\s*)%s)/', preg_quote($this->start), preg_quote($this->end));
         return sprintf('/(%s\n)([\s\S]*?)(\n\s*%s)/', preg_quote($this->start), preg_quote($this->end));
     }
