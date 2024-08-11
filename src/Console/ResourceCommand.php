@@ -5,6 +5,8 @@ namespace AhsanDevs\Console;
 use AhsanDevs\Console\Concerns\StubHelpers;
 use AhsanDevs\Console\Concerns\StubReplaceHelpers;
 use AhsanDevs\ModifyFile;
+use AhsanDevs\ModifyItems;
+use Illuminate\Support\Facades\File;
 
 class ResourceCommand extends Command
 {
@@ -71,6 +73,10 @@ class ResourceCommand extends Command
         $this->addRouteToVueRoutes();
         $this->addSidebarFolderIconToVue();
         $this->addSidebarItemToVue();
+
+        $this->addPermissionsToSeeder();
+        $this->addTranslationsToYaml();
+        $this->addTranslationsToJson();
 
         $this->info('Resource generated successfully.');
     }
@@ -149,5 +155,88 @@ class ResourceCommand extends Command
             "import { FolderIcon, HomeIcon, UserIcon } from '@heroicons/vue/24/outline'",
             $this->packagePath('resources/js/composables/sidebar-nav.ts'),
         );
+    }
+
+    /**
+     * Add the permissions to the seeder.
+     */
+    protected function addPermissionsToSeeder(): void
+    {
+        $filePath = base_path('database/seeders/RequiredSeeder.php');
+
+        $newPermissions = [
+            $this->name().':create',
+            $this->name().':delete',
+            $this->name().':update',
+            $this->name().':view',
+        ];
+
+        new ModifyItems(
+            start: '$permissions = [',
+            add: $newPermissions,
+            file: $filePath,
+            end: '];',
+            sort: true,
+        );
+    }
+
+    /**
+     * Add the translations to the yaml file.
+     */
+    protected function addTranslationsToYaml(): void
+    {
+        $filePath = $this->packagePath('lang/en.yaml');
+
+        $add = [
+            "{$this->pluralPascalName()}: {$this->pluralPascalName()}",
+            "Create {$this->pascalName()}: Create {$this->pascalName()}",
+            "Edit {$this->pascalName()}: Edit {$this->pascalName()}",
+            "Update {$this->pascalName()}: Update {$this->pascalName()}",
+        ];
+
+        // Check if already exists
+        $content = file_get_contents($filePath);
+
+        foreach ($add as $item) {
+            if (str_contains($content, $item)) {
+                unset($add[array_search($item, $add)]);
+            }
+        }
+
+        $add = array_values($add);
+
+        new ModifyItems(
+            start: '# App',
+            add: $add,
+            file: $filePath,
+            end: '',
+            emptyLineOnEnd: true,
+            sort: true,
+            spaces: 0,
+        );
+    }
+
+    /**
+     * Add the translations to the json file.
+     */
+    protected function addTranslationsToJson(): void
+    {
+        $filePath = $this->packagePath('lang/en.json');
+
+        $translations = json_decode(File::get($filePath), true);
+
+        $newTranslations = [
+            "{$this->pluralPascalName()}" => "{$this->pluralPascalName()}",
+            "Create {$this->pascalName()}" => "Create {$this->pascalName()}",
+            "Edit {$this->pascalName()}" => "Edit {$this->pascalName()}",
+            "Update {$this->pascalName()}" => "Update {$this->pascalName()}",
+        ];
+
+        $translations = array_merge($translations, $newTranslations);
+        $translations = array_unique($translations);
+
+        ksort($translations);
+
+        File::put($filePath, json_encode($translations, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
     }
 }
