@@ -12,6 +12,7 @@ class BaseCommand extends Command
      * @var string
      */
     protected $signature = 'ahsandevs:base
+                            {--bootstrap-app : Update bootstrap/app.php}
                             {--redirect-middleware : Add redirect middleware}
                             {--required-seeder : Add required seeder}
                             {--authorization : Add authorization support}
@@ -41,8 +42,12 @@ class BaseCommand extends Command
             $this->addRequiredSeeder();
         }
 
-        if ($this->option('redirect-middleware')) {
-            $this->addRedirectMiddleware();
+        // if ($this->option('redirect-middleware')) {
+        //     $this->addRedirectMiddleware();
+        // }
+
+        if ($this->option('bootstrap-app')) {
+            $this->updateBootstrapApp();
         }
 
         $this->info('Laravel base updated successfully.');
@@ -106,9 +111,9 @@ class BaseCommand extends Command
     }
 
     /**
-     * Add Redirect Middleware.
+     * Update Bootstrap App.
      */
-    protected function addRedirectMiddleware(): void
+    protected function updateBootstrapApp(): void
     {
         $source = __DIR__ . '/../../base/bootstrap/app.php';
         $destination = base_path('bootstrap/app.php');
