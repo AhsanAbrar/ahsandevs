@@ -11,12 +11,13 @@
 
   <Modals />
   <Confirm />
+  <ErrorModal />
   <FlashMessage />
 </template>
 
 <script setup lang="ts">
   import { useStore } from 'Store/main'
-  import { FlashMessage, Modals, Confirm } from 'thetheme'
+  import { Confirm, ErrorModal, FlashMessage, Modals } from 'thetheme'
   import Header from './Header.vue'
   import Sidebar from './Sidebar.vue'
 
