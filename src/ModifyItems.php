@@ -4,6 +4,13 @@ namespace AhsanDevs;
 
 use Exception;
 
+/**
+ * Class ModifyItems
+ *
+ * it will work between items start and end.
+ * it will work with linear items.
+ * if conflict in item end tag then it wont work.
+ */
 class ModifyItems
 {
     /**
@@ -39,12 +46,12 @@ class ModifyItems
     {
         $this->content = $this->readFileContent();
         $this->matches = $this->getMatches();
+
         // dd($this->matches);
 
         // Extract the indentation
-        $indentation = "";
         $indentation = $this->matches[4];
-        // dd($indentation);
+        // dd("'$indentation'");
 
         // Extract existing items and format them
         $existingItems = $this->matches[2];
@@ -56,7 +63,12 @@ class ModifyItems
         // Ensure $this->add is an array
         $addArray = is_array($this->add) ? $this->add : [$this->add];
 
-        $combinedItems = array_merge($existingItemsArray, $addArray);
+        if ($this->prepend) {
+            $combinedItems = array_merge($addArray, $existingItemsArray);
+        } else {
+            $combinedItems = array_merge($existingItemsArray, $addArray);
+        }
+
         // dd($combinedItems);
 
         // Remove duplicates and sort items
@@ -126,13 +138,13 @@ class ModifyItems
     {
         // Format each item with proper indentation and align them correctly
         return implode("\n", array_map(function ($item) use ($indentation) {
-            return sprintf("%s'%s',", $indentation . '    ', trim($item)); // Adjust indentation
+            return sprintf("%s%s", $indentation . str_repeat(' ', $this->spaces), trim($item)); // Adjust indentation
         }, $items));
     }
 
     protected function parseItems(string $items): array
     {
-        preg_match_all('/^\s*(.*?),\s*$/m', $items, $matches);
+        preg_match_all('/^\s*(.*?)\s*$/m', $items, $matches);
 
         return $matches[1];
     }
