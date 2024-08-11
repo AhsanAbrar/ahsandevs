@@ -38,6 +38,7 @@ class ModifyItems
         protected bool $prepend = false,
         protected bool $sort = false,
         protected int $spaces = 4,
+        protected bool $emptyLineOnEnd = false,
     ) {
         $this->handle();
     }
@@ -114,6 +115,9 @@ class ModifyItems
      */
     protected function getMatches(): array
     {
+        // dd( $this->getPattern() );
+        // preg_match($this->getPattern(), $this->content, $matches);
+        // dd($matches);
         if (!preg_match($this->getPattern(), $this->content, $matches)) {
             throw new Exception(sprintf(
                 'The code "%s" was not found in the file "%s".',
@@ -130,9 +134,7 @@ class ModifyItems
      */
     protected function getPattern(): string
     {
-        return sprintf('/(%s\n)([\s\S]*?)(\n(\s*)%s)/', preg_quote($this->start), $this->end);
-        return sprintf('/(%s\n)([\s\S]*?)(\n(\s*)%s)/', preg_quote($this->start), preg_quote($this->end));
-        return sprintf('/(%s\n)([\s\S]*?)(\n\s*%s)/', preg_quote($this->start), preg_quote($this->end));
+        return sprintf('/(%s\n)([\s\S]*?)(\n(\s*)%s)/', preg_quote($this->start), $this->emptyLineOnEnd ? '$' : preg_quote($this->end));
     }
 
     protected function formatItems(array $items, string $indentation): string
