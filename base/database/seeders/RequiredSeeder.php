@@ -85,16 +85,16 @@ class RequiredSeeder extends Seeder
      */
     protected function roles(): void
     {
-        $data = [
+        $roles = [
             'Admin',
             'User',
         ];
 
-        $data = collect($data)->map(function ($value) {
+        $roles = collect($roles)->map(function ($value) {
             return ['name' => $value];
         })->all();
 
-        DB::table('roles')->insert($data);
+        DB::table('roles')->insert($roles);
     }
 
     /**
@@ -102,7 +102,7 @@ class RequiredSeeder extends Seeder
      */
     protected function permissions(): void
     {
-        $data = [
+        $permissions = [
             'setting',
             'user:create',
             'user:delete',
@@ -110,11 +110,11 @@ class RequiredSeeder extends Seeder
             'user:view',
         ];
 
-        $data = collect($data)->map(function ($value) {
+        $permissions = collect($permissions)->map(function ($value) {
             return ['name' => $value];
         })->all();
 
-        DB::table('permissions')->insert($data);
+        DB::table('permissions')->insert($permissions);
     }
 
     /**
