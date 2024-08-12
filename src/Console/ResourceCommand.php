@@ -17,7 +17,8 @@ class ResourceCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'ahsandevs:resource {name : The resource name} {package : The span package dir name}';
+    protected $signature = 'ahsandevs:resource {name : The resource name} {package : The span package dir name}
+                            {--s|save : Generate save resource only}';
 
     /**
      * The console command description.
@@ -30,6 +31,18 @@ class ResourceCommand extends Command
      * Execute the console command.
      */
     public function handle()
+    {
+        if ($this->option('save')) {
+            $this->generateSaveResource();
+        } else {
+            $this->generateResource();
+        }
+    }
+
+    /**
+     * Add the controller import to the api.php file.
+     */
+    protected function generateResource(): void
     {
         $this->call('ahsandevs:controller', [
             'name' => $this->argument('name').'Controller',
@@ -84,6 +97,45 @@ class ResourceCommand extends Command
     /**
      * Add the controller import to the api.php file.
      */
+    protected function generateSaveResource(): void
+    {
+        $this->call('ahsandevs:controller', [
+            'name' => $this->argument('name').'Controller',
+            'package' => $this->argument('package'),
+            '--save' => true,
+        ]);
+
+        $this->call('ahsandevs:request', [
+            'name' => $this->argument('name').'Request',
+            'package' => $this->argument('package'),
+        ]);
+
+        $this->call('ahsandevs:vue-view', [
+            'name' => 'Index',
+            'package' => $this->argument('package'),
+            '--dir' => $this->pluralName(),
+            '--resource' => $this->argument('name'),
+        ]);
+
+        $this->call('ahsandevs:vue-view', [
+            'name' => 'Form',
+            'package' => $this->argument('package'),
+            '--dir' => $this->pluralName(),
+            '--resource' => $this->argument('name'),
+        ]);
+
+        $this->addImportToApiRoutes();
+        $this->addSaveRouteToApiRoutes();
+
+        $this->addImportToVueRoutes();
+        $this->addRouteToVueRoutes();
+
+        $this->info('Save resource generated successfully.');
+    }
+
+    /**
+     * Add the controller import to the api.php file.
+     */
     protected function addImportToApiRoutes(): void
     {
         new ModifyFile(
@@ -102,6 +154,19 @@ class ResourceCommand extends Command
         new ModifyFile(
             pattern: "Route::resource\('.*',\s.*::class\);",
             add: "Route::resource('{$this->pluralName()}', {$this->pascalName()}Controller::class);",
+            file: $this->packagePath('routes/api.php'),
+            sort: true,
+        );
+    }
+
+    /**
+     * Add the route line to the api.php file.
+     */
+    protected function addSaveRouteToApiRoutes(): void
+    {
+        new ModifyFile(
+            pattern: "Route::resource\('.*',\s.*::class\)->only\(['create', 'store']\);",
+            add: "Route::resource('{$this->pluralName()}', {$this->pascalName()}Controller::class)->only(['create', 'store']);",
             file: $this->packagePath('routes/api.php'),
             sort: true,
         );
