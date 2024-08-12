@@ -111,24 +111,13 @@ class ResourceCommand extends Command
         ]);
 
         $this->call('ahsandevs:vue-view', [
-            'name' => 'Index',
-            'package' => $this->argument('package'),
-            '--dir' => $this->pluralName(),
-            '--resource' => $this->argument('name'),
-        ]);
-
-        $this->call('ahsandevs:vue-view', [
             'name' => 'Form',
             'package' => $this->argument('package'),
-            '--dir' => $this->pluralName(),
             '--resource' => $this->argument('name'),
         ]);
 
         $this->addImportToApiRoutes();
         $this->addSaveRouteToApiRoutes();
-
-        $this->addImportToVueRoutes();
-        $this->addRouteToVueRoutes();
 
         $this->info('Save resource generated successfully.');
     }
@@ -165,7 +154,7 @@ class ResourceCommand extends Command
     protected function addSaveRouteToApiRoutes(): void
     {
         new ModifyFile(
-            pattern: "Route::resource\('.*',\s.*::class\)->only\(['create', 'store']\);",
+            pattern: "Route::resource\('.*',\s.*::class\)->only\(\['create', 'store'\]\);",
             add: "Route::resource('{$this->pluralName()}', {$this->pascalName()}Controller::class)->only(['create', 'store']);",
             file: $this->packagePath('routes/api.php'),
             sort: true,
