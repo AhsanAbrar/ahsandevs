@@ -39,6 +39,16 @@ trait CommandHelpers
         }
     }
 
+    protected function copyBaseFiles(array $files): void
+    {
+        foreach ($files as $file) {
+            $source = __DIR__ . '/../../../base/' . $file;
+            $destination = base_path($file);
+
+            $this->filesystem->copy($source, $destination);
+        }
+    }
+
     /**
      * Build the directory if not exists.
      *

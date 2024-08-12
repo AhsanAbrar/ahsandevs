@@ -101,18 +101,16 @@ class BaseCommand extends Command
      */
     protected function addRequiredSeeder(): void
     {
-        $source = __DIR__ . '/../../base/database/seeders/RequiredSeeder.php';
-        $destination = base_path('database/seeders/RequiredSeeder.php');
+        $this->copyBaseFiles([
+            'database/seeders/DatabaseSeeder.php',
+            'database/seeders/RequiredSeeder.php',
+        ]);
 
-        if (!$this->filesystem->exists($destination)) {
-            $this->filesystem->copy($source, $destination);
-
-            new ModifyMethod(
-                'public function run(): void',
-                "\n" . str_repeat(' ', 8) . '$this->call(RequiredSeeder::class);',
-                base_path('database/seeders/DatabaseSeeder.php')
-            );
-        }
+        // new ModifyMethod(
+        //     'public function run(): void',
+        //     "\n" . str_repeat(' ', 8) . '$this->call(RequiredSeeder::class);',
+        //     base_path('database/seeders/DatabaseSeeder.php')
+        // );
     }
 
     /**
@@ -131,16 +129,16 @@ class BaseCommand extends Command
      */
     protected function resetBreeze(): void
     {
-        $files = [
+        $this->copyBaseFiles([
+            'app/Http/Controllers/Auth/AuthenticatedSessionController.php',
+            'app/Http/Controllers/Auth/ConfirmablePasswordController.php',
+            'app/Http/Controllers/Auth/EmailVerificationNotificationController.php',
+            'app/Http/Controllers/Auth/EmailVerificationPromptController.php',
+            'app/Http/Controllers/Auth/RegisteredUserController.php',
+            'app/Http/Controllers/Auth/VerifyEmailController.php',
             'resources/js/app.js',
             'routes/auth.php',
             'routes/web.php',
-        ];
-
-        $basePath = __DIR__ . '/../../base/';
-
-        foreach ($files as $file) {
-            $this->filesystem->copy($basePath.$file, base_path($file));
-        }
+        ]);
     }
 }
