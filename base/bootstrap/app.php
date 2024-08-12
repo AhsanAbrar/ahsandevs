@@ -18,10 +18,13 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->shouldRenderJsonWhen(function (Request $request, Throwable $e) {
-            if ($request->hasHeader('X-AhsanDevs-Error-HTML')) {
-                return false;
-            }
+            $redirectableExceptions = [
+                \Illuminate\Auth\AuthenticationException::class,
+                \Illuminate\Validation\ValidationException::class,
+            ];
 
-            return $request->expectsJson();
+            return $request->hasHeader('X-AhsanDevs-Error-HTML')
+                ? in_array(get_class($e), $redirectableExceptions, true)
+                : $request->expectsJson();
         });
     })->create();
