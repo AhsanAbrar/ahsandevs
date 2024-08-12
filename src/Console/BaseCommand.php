@@ -12,6 +12,7 @@ class BaseCommand extends Command
      * @var string
      */
     protected $signature = 'ahsandevs:base
+                            {--reset-breeze : Reset breeze files}
                             {--bootstrap-app : Update bootstrap/app.php}
                             {--redirect-middleware : Add redirect middleware}
                             {--required-seeder : Add required seeder}
@@ -48,6 +49,10 @@ class BaseCommand extends Command
 
         if ($this->option('bootstrap-app')) {
             $this->updateBootstrapApp();
+        }
+
+        if ($this->option('reset-breeze')) {
+            $this->resetBreeze();
         }
 
         $this->info('Laravel base updated successfully.');
@@ -119,5 +124,23 @@ class BaseCommand extends Command
         $destination = base_path('bootstrap/app.php');
 
         $this->filesystem->copy($source, $destination);
+    }
+
+    /**
+     * Reset breeze files.
+     */
+    protected function resetBreeze(): void
+    {
+        $files = [
+            'resources/js/app.js',
+            'routes/auth.php',
+            'routes/web.php',
+        ];
+
+        $basePath = __DIR__ . '/../../base/';
+
+        foreach ($files as $file) {
+            $this->filesystem->copy($basePath.$file, base_path($file));
+        }
     }
 }
