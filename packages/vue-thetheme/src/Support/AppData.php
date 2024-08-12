@@ -26,6 +26,7 @@ class AppData implements JsonSerializable
         $this->data = [
             'app_name' => config('app.name'),
             'csrf_token' => csrf_token(),
+            'debug' => config('app.debug'),
             'header_logo' => option('app_logo'),
             'prefix' => Span::prefix(),
             'is_super_admin' => Auth::user()->isSuperAdmin(),

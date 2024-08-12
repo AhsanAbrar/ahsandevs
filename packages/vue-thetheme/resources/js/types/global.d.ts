@@ -1,9 +1,10 @@
 interface AppData {
   app_name: string
   csrf_token: string
+  debug: boolean
   header_logo: string | null
-  prefix: string
   is_super_admin: boolean
+  prefix: string
   permissions: string[]
   translations: Record<string, string>
   user: {
