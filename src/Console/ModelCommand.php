@@ -45,7 +45,7 @@ class ModelCommand extends Command
      */
     protected function generateMigration(): void
     {
-        $name = 'create_' . $this->pluralName() . '_table';
+        $name = 'create_' . $this->snakeName() . '_table';
         $packagePath = $this->option('package') ? 'packages/'.$this->argument('package').'/database/migrations' : null;
 
         $this->call('make:migration', [
