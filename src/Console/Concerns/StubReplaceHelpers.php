@@ -152,4 +152,12 @@ trait StubReplaceHelpers
     {
         return Str::snake( $this->getNameArgument() );
     }
+
+    /**
+     * Get the plural snake case name.
+     */
+    protected function pluralSnakeName(): string
+    {
+        return Str::plural( $this->snakeName() );
+    }
 }
