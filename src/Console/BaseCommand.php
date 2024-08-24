@@ -14,7 +14,6 @@ class BaseCommand extends Command
     protected $signature = 'ahsandevs:base
                             {--reset-breeze : Reset breeze files}
                             {--bootstrap-app : Update bootstrap/app.php}
-                            {--redirect-middleware : Add redirect middleware}
                             {--required-seeder : Add required seeder}
                             {--authorization : Add authorization support}
                             {--options : Add options migrations}';
@@ -42,10 +41,6 @@ class BaseCommand extends Command
         if ($this->option('required-seeder')) {
             $this->addRequiredSeeder();
         }
-
-        // if ($this->option('redirect-middleware')) {
-        //     $this->addRedirectMiddleware();
-        // }
 
         if ($this->option('bootstrap-app')) {
             $this->updateBootstrapApp();
