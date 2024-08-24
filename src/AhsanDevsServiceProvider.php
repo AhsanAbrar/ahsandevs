@@ -42,6 +42,7 @@ class AhsanDevsServiceProvider extends ServiceProvider
 
             Console\PackageCommand::class,
             Console\SetDefaultPackageCommand::class,
+            Console\DefaultPackageCommand::class,
 
             Console\ResourceCommand::class,
 
