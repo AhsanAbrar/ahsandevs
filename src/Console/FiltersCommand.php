@@ -16,7 +16,6 @@ class FiltersCommand extends Command
      */
     protected $signature = 'ahsandevs:filters {name : The filters name} {package : The span package dir name}';
 
-
     /**
      * The console command description.
      *
