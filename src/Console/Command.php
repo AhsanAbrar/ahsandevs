@@ -7,6 +7,7 @@ use Illuminate\Console\Command as BaseCommand;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 // use function Laravel\Prompts\select;
 
 class Command extends BaseCommand implements PromptsForMissingInput
@@ -27,7 +28,11 @@ class Command extends BaseCommand implements PromptsForMissingInput
     protected function promptForMissingArgumentsUsing(): array
     {
         return [
-            'package' => fn () => $this->choice('Please select a package or write package name', $this->packageOptions()),
+            'package' => fn () => $this->choice(
+                'Please select a package or write package name',
+                $this->packageOptions(),
+                $this->getDefaultPackage()
+            ),
             // 'package' => fn () => select('Please select a package or write package name', $this->packageOptions()),
         ];
     }
@@ -37,14 +42,20 @@ class Command extends BaseCommand implements PromptsForMissingInput
      */
     protected function packageOptions(): array
     {
-        $directories = File::directories(base_path('packages'));
+        return array_map('basename', File::directories(base_path('packages')));
+    }
 
-        $options = [];
+    /**
+     * Get the default package name from storage.
+     */
+    protected function getDefaultPackage(): ?string
+    {
+        $filePath = 'ahsandevs-default-package';
 
-        foreach ($directories as $directory) {
-            $options[] = basename($directory);
+        if (!Storage::exists($filePath)) {
+            return null;
         }
 
-        return $options;
+        return trim(strtok(Storage::get($filePath), "\n")) ?: null;
     }
 }
