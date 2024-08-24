@@ -26,7 +26,7 @@ class PackageCommand extends Command implements PromptsForMissingInput
      *
      * @var string
      */
-    protected $signature = 'ahsandevs:package {package : The span package name} {type=basic : The span package type}
+    protected $signature = 'ahsandevs:package {package : The span package name} {type : The span package type}
                             {--routes : Add web routes to the basic package}
                             {--views : Add web routes and views to the basic package}
                             {--namespace= : The root namespace of the package if it is different from package name}
@@ -40,6 +40,20 @@ class PackageCommand extends Command implements PromptsForMissingInput
      * @var string
      */
     protected $description = 'Create a new span package';
+
+    /**
+     * Prompt for missing input arguments using the returned questions.
+     */
+    protected function promptForMissingArgumentsUsing(): array
+    {
+        return [
+            'type' => fn () => $this->choice(
+                'Select the package type:',
+                ['basic', 'blade', 'vue', 'vue-thetheme'],
+                'basic'
+            ),
+        ];
+    }
 
     /**
      * Execute the console command.
@@ -334,9 +348,9 @@ class PackageCommand extends Command implements PromptsForMissingInput
             $this->fail('The package name must be in kebab-case.');
         }
 
-        if (! in_array($this->argument('type'), ['basic', 'blade', 'vue', 'vue-thetheme'])) {
-            $this->fail('Invalid package type. Allowed types: basic, blade, vue, vue-thetheme');
-        }
+        // if (! in_array($this->argument('type'), ['basic', 'blade', 'vue', 'vue-thetheme'])) {
+        //     $this->fail('Invalid package type. Allowed types: basic, blade, vue, vue-thetheme');
+        // }
     }
 
     public function replacePlaceholders($str)
