@@ -49,52 +49,56 @@ class ResourceCommand extends Command
      */
     protected function generateResource(): void
     {
-        $this->call('ahsandevs:controller', [
-            'name' => $this->argument('name').'Controller',
-            'package' => $this->argument('package'),
-        ]);
+        if (!$this->option('vue')) {
+            $this->call('ahsandevs:controller', [
+                'name' => $this->argument('name').'Controller',
+                'package' => $this->argument('package'),
+            ]);
 
-        $this->call('ahsandevs:filters', [
-            'name' => $this->argument('name').'Filters',
-            'package' => $this->argument('package'),
-        ]);
+            $this->call('ahsandevs:filters', [
+                'name' => $this->argument('name').'Filters',
+                'package' => $this->argument('package'),
+            ]);
 
-        $this->call('ahsandevs:request', [
-            'name' => $this->argument('name').'Request',
-            'package' => $this->argument('package'),
-        ]);
+            $this->call('ahsandevs:request', [
+                'name' => $this->argument('name').'Request',
+                'package' => $this->argument('package'),
+            ]);
 
-        $this->call('ahsandevs:model', [
-            'name' => $this->argument('name'),
-            'package' => $this->argument('package'),
-            '--migration' => true,
-        ]);
+            $this->call('ahsandevs:model', [
+                'name' => $this->argument('name'),
+                'package' => $this->argument('package'),
+                '--migration' => true,
+            ]);
 
-        $this->call('ahsandevs:vue-view', [
-            'name' => 'Index',
-            'package' => $this->argument('package'),
-            '--dir' => $this->pluralName(),
-            '--resource' => $this->argument('name'),
-        ]);
+            $this->addImportToApiRoutes();
+            $this->addRouteToApiRoutes();
 
-        $this->call('ahsandevs:vue-view', [
-            'name' => 'Form',
-            'package' => $this->argument('package'),
-            '--dir' => $this->pluralName(),
-            '--resource' => $this->argument('name'),
-        ]);
+            $this->addPermissionsToSeeder();
+            $this->addTranslationsToYaml();
+            $this->addTranslationsToJson();
+        }
 
-        $this->addImportToApiRoutes();
-        $this->addRouteToApiRoutes();
+        if (!$this->option('laravel')) {
+            $this->call('ahsandevs:vue-view', [
+                'name' => 'Index',
+                'package' => $this->argument('package'),
+                '--dir' => $this->pluralName(),
+                '--resource' => $this->argument('name'),
+            ]);
 
-        $this->addImportToVueRoutes();
-        $this->addRouteToVueRoutes();
-        $this->addSidebarFolderIconToVue();
-        $this->addSidebarItemToVue();
+            $this->call('ahsandevs:vue-view', [
+                'name' => 'Form',
+                'package' => $this->argument('package'),
+                '--dir' => $this->pluralName(),
+                '--resource' => $this->argument('name'),
+            ]);
 
-        $this->addPermissionsToSeeder();
-        $this->addTranslationsToYaml();
-        $this->addTranslationsToJson();
+            $this->addImportToVueRoutes();
+            $this->addRouteToVueRoutes();
+            $this->addSidebarFolderIconToVue();
+            $this->addSidebarItemToVue();
+        }
 
         $this->info('Resource generated successfully.');
     }
@@ -104,25 +108,29 @@ class ResourceCommand extends Command
      */
     protected function generateSaveResource(): void
     {
-        $this->call('ahsandevs:controller', [
-            'name' => $this->argument('name').'Controller',
-            'package' => $this->argument('package'),
-            '--save' => true,
-        ]);
+        if (!$this->option('vue')) {
+            $this->call('ahsandevs:controller', [
+                'name' => $this->argument('name').'Controller',
+                'package' => $this->argument('package'),
+                '--save' => true,
+            ]);
 
-        $this->call('ahsandevs:request', [
-            'name' => $this->argument('name').'Request',
-            'package' => $this->argument('package'),
-        ]);
+            $this->call('ahsandevs:request', [
+                'name' => $this->argument('name').'Request',
+                'package' => $this->argument('package'),
+            ]);
 
-        $this->call('ahsandevs:vue-view', [
-            'name' => 'Form',
-            'package' => $this->argument('package'),
-            '--resource' => $this->argument('name'),
-        ]);
+            $this->addImportToApiRoutes();
+            $this->addSaveRouteToApiRoutes();
+        }
 
-        $this->addImportToApiRoutes();
-        $this->addSaveRouteToApiRoutes();
+        if (!$this->option('laravel')) {
+            $this->call('ahsandevs:vue-view', [
+                'name' => 'Form',
+                'package' => $this->argument('package'),
+                '--resource' => $this->argument('name'),
+            ]);
+        }
 
         $this->info('Save resource generated successfully.');
     }
