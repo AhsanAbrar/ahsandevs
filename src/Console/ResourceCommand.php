@@ -18,6 +18,9 @@ class ResourceCommand extends Command
      * @var string
      */
     protected $signature = 'ahsandevs:resource {name : The resource name} {package : The span package dir name}
+                            {--l|laravel : Generate back-end laravel resource only}
+                            {--f|vue : Generate front-end vue resource only}
+                            {--i|invokable : Generate invokable resource only}
                             {--s|save : Generate save resource only}';
 
     /**
@@ -34,6 +37,8 @@ class ResourceCommand extends Command
     {
         if ($this->option('save')) {
             $this->generateSaveResource();
+        } elseif ($this->option('invokable')) {
+            $this->generateInvokableResource();
         } else {
             $this->generateResource();
         }
@@ -125,6 +130,23 @@ class ResourceCommand extends Command
     /**
      * Add the controller import to the api.php file.
      */
+    protected function generateInvokableResource(): void
+    {
+        $this->call('ahsandevs:controller', [
+            'name' => $this->argument('name').'Controller',
+            'package' => $this->argument('package'),
+            '--invokable' => true,
+        ]);
+
+        $this->addImportToApiRoutes();
+        $this->addInvokableRouteToApiRoutes();
+
+        $this->info('Invokable resource generated successfully.');
+    }
+
+    /**
+     * Add the controller import to the api.php file.
+     */
     protected function addImportToApiRoutes(): void
     {
         new ModifyFile(
@@ -158,6 +180,18 @@ class ResourceCommand extends Command
             add: "Route::resource('{$this->pluralName()}', {$this->pascalName()}Controller::class)->only(['create', 'store']);",
             file: $this->packagePath('routes/api.php'),
             sort: true,
+        );
+    }
+
+    /**
+     * Add the route line to the api.php file.
+     */
+    protected function addInvokableRouteToApiRoutes(): void
+    {
+        new ModifyFile(
+            pattern: "Route::get\('.*',\s.*::class\);",
+            add: "Route::get('{$this->pluralName()}', {$this->pascalName()}Controller::class);",
+            file: $this->packagePath('routes/api.php'),
         );
     }
 
