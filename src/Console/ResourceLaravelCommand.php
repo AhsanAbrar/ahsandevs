@@ -17,7 +17,8 @@ class ResourceLaravelCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'ahsandevs:resource {name : The resource name} {package : The span package dir name}
+    protected $signature = 'ahsandevs:resource-laravel {name : The resource name} {package : The span package dir name}
+                            {--i|invokable : Generate invokable resource only}
                             {--s|save : Generate save resource only}';
 
     /**
@@ -25,15 +26,47 @@ class ResourceLaravelCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Generate Resource';
+    protected $description = 'Generate Resource Back-end Laravel';
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
+        // Flags
+            // By Default it will generate full back-end laravel resource.
+            // --save
+            // --invokable
+            // --crud (it will be by default, i have just added this explicitly)
+            //
+
+        // Scenario 1 - Full crud resource
+            // - Routes
+            // - Migration
+            // - Model
+            // - Controller
+            // - Filters
+            // - Request
+
+        // Scenario 2 - Single invokable action
+            // - Migration
+            // - Model
+            // - Routes
+            // - Invokable Controller
+
+        // Scenario 3 - Save controller
+            // - Migration
+            // - Model
+            // - Routes
+            // - Save Controller
+
+
+
+
         if ($this->option('save')) {
             $this->generateSaveResource();
+        } elseif ($this->option('invokable')) {
+            $this->generateInvokableResource();
         } else {
             $this->generateResource();
         }
@@ -98,6 +131,34 @@ class ResourceLaravelCommand extends Command
      * Add the controller import to the api.php file.
      */
     protected function generateSaveResource(): void
+    {
+        $this->call('ahsandevs:controller', [
+            'name' => $this->argument('name').'Controller',
+            'package' => $this->argument('package'),
+            '--save' => true,
+        ]);
+
+        $this->call('ahsandevs:request', [
+            'name' => $this->argument('name').'Request',
+            'package' => $this->argument('package'),
+        ]);
+
+        $this->call('ahsandevs:vue-view', [
+            'name' => 'Form',
+            'package' => $this->argument('package'),
+            '--resource' => $this->argument('name'),
+        ]);
+
+        $this->addImportToApiRoutes();
+        $this->addSaveRouteToApiRoutes();
+
+        $this->info('Save resource generated successfully.');
+    }
+
+    /**
+     * Add the controller import to the api.php file.
+     */
+    protected function generateInvokableResource(): void
     {
         $this->call('ahsandevs:controller', [
             'name' => $this->argument('name').'Controller',
