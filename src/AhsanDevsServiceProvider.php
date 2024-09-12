@@ -45,6 +45,7 @@ class AhsanDevsServiceProvider extends ServiceProvider
             Console\DefaultPackageCommand::class,
 
             Console\ResourceCommand::class,
+            Console\ResourceLaravelCommand::class,
 
             Console\ControllerCommand::class,
             Console\FilterCommand::class,
