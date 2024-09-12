@@ -49,6 +49,7 @@ class AhsanDevsServiceProvider extends ServiceProvider
             Console\ControllerCommand::class,
             Console\FilterCommand::class,
             Console\FiltersCommand::class,
+            Console\MigrationCommand::class,
             Console\ModelCommand::class,
             Console\RequestCommand::class,
 
