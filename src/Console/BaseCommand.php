@@ -131,6 +131,7 @@ class BaseCommand extends Command
             'app/Http/Controllers/Auth/EmailVerificationPromptController.php',
             'app/Http/Controllers/Auth/RegisteredUserController.php',
             'app/Http/Controllers/Auth/VerifyEmailController.php',
+            'resources/views/layouts/guest.blade.php',
             'resources/js/app.js',
             'routes/auth.php',
             'routes/web.php',
