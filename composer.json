@@ -9,10 +9,10 @@
     ],
     "require": {
         "php": "^8.2",
-        "ahsanabrar/support": "^0.1.1",
-        "illuminate/console": "^11.0",
-        "illuminate/support": "^11.0",
-        "laranext/span": "^0.1.8"
+        "ahsanabrar/support": "^0.1.5",
+        "illuminate/console": "^11.0|^12.0",
+        "illuminate/support": "^11.0|^12.0",
+        "laranext/span": "^0.1.9"
     },
     "autoload": {
         "psr-4": {
