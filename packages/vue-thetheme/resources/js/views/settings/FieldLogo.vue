@@ -11,7 +11,7 @@
         </span>
 
         <label
-          class="cursor-pointer rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          class="cursor-pointer rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 shadow-xs hover:bg-gray-50 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
         >
           {{ __('Change') }}
           <input type="file" class="hidden" accept="image/*" name="logo" @change="onChoose">
@@ -20,7 +20,7 @@
         <button
           v-if="src"
           type="button"
-          class="ml-2 inline-flex items-center rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-0"
+          class="ml-2 inline-flex items-center rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 shadow-xs hover:bg-gray-50 focus:outline-hidden focus:ring-0"
           @click="remove"
         >
           {{ __('Remove') }}

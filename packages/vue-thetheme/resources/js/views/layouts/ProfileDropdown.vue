@@ -6,7 +6,7 @@
       </form>
 
       <button
-        class="flex items-center text-sm font-medium text-gray-500 transition duration-150 ease-in-out hover:border-gray-300 hover:text-gray-700 focus:border-gray-300 focus:text-gray-700 focus:outline-none"
+        class="flex items-center text-sm font-medium text-gray-500 transition duration-150 ease-in-out hover:border-gray-300 hover:text-gray-700 focus:border-gray-300 focus:text-gray-700 focus:outline-hidden"
       >
         <UserAvatar :avatar="user.avatar" class="h-6 w-6" />
 
@@ -28,7 +28,7 @@
 
     <template #content>
       <div
-        class="absolute mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none ltr:right-0 rtl:left-0"
+        class="absolute mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-hidden ltr:right-0 rtl:left-0"
         role="menu"
         aria-orientation="vertical"
         aria-labelledby="user-menu"
@@ -46,14 +46,14 @@
           <div class="py-1" role="none">
             <RouterLink
               to="/profile"
-              class="block px-4 py-2 text-sm leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+              class="block px-4 py-2 text-sm leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100 focus:bg-gray-100 focus:outline-hidden"
             >
               {{ __('Profile') }}
             </RouterLink>
             <RouterLink
               v-if="can('setting')"
               to="/settings/general"
-              class="block px-4 py-2 text-sm leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+              class="block px-4 py-2 text-sm leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100 focus:bg-gray-100 focus:outline-hidden"
             >
               {{ __('Settings') }}
             </RouterLink>

@@ -2,7 +2,7 @@
   <aside
     id="sidebar"
     :class="[!store.showSidebar && 'ltr:-translate-x-full rtl:translate-x-full']"
-    class="fixed inset-y-0 z-40 grid w-64 transform grid-rows-[auto,1fr] bg-gray-800 transition-transform duration-300"
+    class="fixed inset-y-0 z-40 grid w-64 transform grid-rows-[auto_1fr] bg-gray-800 transition-transform duration-300"
   >
     <SidebarLogo />
 

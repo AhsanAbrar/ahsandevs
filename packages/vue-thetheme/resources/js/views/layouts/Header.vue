@@ -1,5 +1,5 @@
 <template>
-  <header class="fixed z-30 h-12 w-full bg-white shadow">
+  <header class="fixed z-30 h-12 w-full bg-white shadow-sm">
     <div class="flex h-full items-center">
       <RouterLink to="/" class="flex h-12 w-64 items-center px-8">
         <Square2StackIcon class="h-6 w-6 text-blue-500" />

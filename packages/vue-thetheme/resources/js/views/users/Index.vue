@@ -9,7 +9,7 @@
         <button
           v-if="can('user:create')"
           type="button"
-          class="rounded-md bg-blue-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 ltr:ml-4 rtl:mr-4"
+          class="rounded-md bg-blue-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 ltr:ml-4 rtl:mr-4"
           @click="useModalStore().add(Form)"
         >
           {{ __('Create User') }}

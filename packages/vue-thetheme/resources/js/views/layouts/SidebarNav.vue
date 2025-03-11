@@ -21,7 +21,7 @@
             :is="item.icon"
             :class="[
               isActive(item.uri) ? 'text-gray-300' : 'text-gray-400 group-hover:text-gray-300',
-              'h-5 w-5 flex-shrink-0 ltr:mr-3 rtl:ml-3',
+              'h-5 w-5 shrink-0 ltr:mr-3 rtl:ml-3',
             ]"
             aria-hidden="true"
           />
@@ -29,7 +29,7 @@
 
           <span
             v-if="item.create && can(item.createPermission || 'false')"
-            class="hover:opacity-250 flex h-5 w-5 cursor-pointer items-center justify-center rounded bg-gray-700 text-white hover:bg-gray-800 hover:text-gray-300 group-hover:bg-gray-500 ltr:ml-auto rtl:mr-auto"
+            class="hover:opacity-250 flex h-5 w-5 cursor-pointer items-center justify-center rounded-sm bg-gray-700 text-white hover:bg-gray-800 hover:text-gray-300 group-hover:bg-gray-500 ltr:ml-auto rtl:mr-auto"
             @click.prevent="create(item.create || '/')"
           >
             <Component :is="PlusIcon" class="h-3.5 w-3.5" />
