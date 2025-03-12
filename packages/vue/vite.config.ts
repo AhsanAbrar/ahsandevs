@@ -8,6 +8,9 @@ export default defineConfig({
     ahsandevs(),
     vue(),
   ],
+  server: {
+    cors: true
+  },
   resolve: {
     alias: {
       '@': resolve(__dirname, 'resources/js'),
